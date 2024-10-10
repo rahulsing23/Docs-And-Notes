@@ -1,4 +1,4 @@
-import Logo from '@/components/Logo';
+
 import { SignIn } from '@clerk/clerk-react'
 import WolfImage from "@/assets/Images/wolf.jpg"
 export default function SignInPage() {
