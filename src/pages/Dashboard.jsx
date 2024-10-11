@@ -5,9 +5,8 @@ import { Button } from '@/components/ui/button';
 import { SignOutButton, UserButton, useUser } from '@clerk/clerk-react';
 
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { SlOptionsVertical } from "react-icons/sl";
 import LogoIcon from '@/assets/icons/Logo5.jpg';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Tags from '@/components/Tags';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '@/firebase/firebase';
@@ -18,6 +17,10 @@ export default function DashboardPage() {
   const [workspaceList, setWorkspaceList] = useState([]); // State to store the document data
   const [totalWorkspace, setTotalWorkspace] = useState(0);
   const [inputquery, setInputquery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
+  const Inputref = useRef()
+
+  // Add workspace
   const countDocumentsInCollection = async (collectionName) => {
     try {
       const querySnapshot = await getDocs(collection(db, collectionName));
@@ -35,9 +38,34 @@ export default function DashboardPage() {
       console.error('Error counting documents: ', error);
     }
   };
+
+  // Search Query
+  const handleSearchedQuery = () =>{
+      
+  }
+
+
   useEffect(() => {
+    // Function to handle typing events
+    const handleTyping = (event) => {
+      if (Inputref.current) {
+        Inputref.current.focus();
+        setSearchQuery((prevQuery) => prevQuery + event.key);
+      }
+    };
+
+    // Add workspace function call
     countDocumentsInCollection('workspace');
-  }, []);
+    // Add event listener for typing
+    document.addEventListener('keydown', handleTyping);
+
+    // Clean up event listener when component unmounts
+    return () => {
+      document.removeEventListener('keydown', handleTyping);
+    };
+  }, [searchQuery]);
+ 
+
   const userButtonAppearance = {
     elements: {
       userButtonAvatarBox: 'w-10 h-10',
@@ -83,11 +111,14 @@ export default function DashboardPage() {
             <div className="w-[70%] flex  flex-col items-center">
               {/* Note {SearchBar} */}
               <div className="w-[600px] p-5 rounded-lg">
-                <Input
+                <Input ref={Inputref}
                   className="bg-[#061129] bg-opacity-50 rounded-xl border-blue-950 focus:outline-none text-center text-white placeholder:text-white"
                   placeholder="Explore"
                   onChange={(e)=>setInputquery(e.target.value)}
-                  
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter")
+                        handleSearchedQuery();
+                    }}                  
                 />
               </div>
               {/* Note Workspace */}
