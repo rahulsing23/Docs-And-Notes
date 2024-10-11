@@ -7,6 +7,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import RootLayout from './layout/root-layout'
 import DashboardLayout from './layout/dashboard-layout'
 import CreateWorkspace from './pages/CreateWorkspace'
+import WorkspacePage from "./pages/WorkspacePage"
 // Import the components
 
 
@@ -29,6 +30,7 @@ const router = createBrowserRouter([
         children: [
           { path: '/', element: <DashboardPage /> },
           { path: '/createworkspace', element: <CreateWorkspace /> },
+          { path: '/workspace/:id', element: <WorkspacePage /> },
 
         ],
       },

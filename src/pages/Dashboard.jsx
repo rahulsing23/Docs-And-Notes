@@ -5,17 +5,39 @@ import { Button } from '@/components/ui/button';
 import { SignOutButton, UserButton, useUser } from '@clerk/clerk-react';
 
 import { ScrollArea } from '@/components/ui/scroll-area';
-
+import { SlOptionsVertical } from "react-icons/sl";
 import LogoIcon from '@/assets/icons/Logo5.jpg';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Tags from '@/components/Tags';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '@/firebase/firebase';
+import WorkspaceCard from '@/components/WorkspaceCard';
 
 export default function DashboardPage() {
   const { user } = useUser();
-  const [totalworkspace, setTotalworkspace] = useState(0);
+  const [workspaceList, setWorkspaceList] = useState([]); // State to store the document data
+  const [totalWorkspace, setTotalWorkspace] = useState(0);
+  const [inputquery, setInputquery] = useState("");
+  const countDocumentsInCollection = async (collectionName) => {
+    try {
+      const querySnapshot = await getDocs(collection(db, collectionName));
 
+      // Convert documents to an array of data
+      const workspaceData = querySnapshot.docs.map((doc, index) => ({
+        id: doc.id,
+        ...doc.data(), // Spreading document data and id
+      }));
 
-
+      // Setting the document list in state
+      setWorkspaceList(workspaceData);
+      setTotalWorkspace(querySnapshot.size); // Set the total number of documents
+    } catch (error) {
+      console.error('Error counting documents: ', error);
+    }
+  };
+  useEffect(() => {
+    countDocumentsInCollection('workspace');
+  }, []);
   const userButtonAppearance = {
     elements: {
       userButtonAvatarBox: 'w-10 h-10',
@@ -62,22 +84,39 @@ export default function DashboardPage() {
               {/* Note {SearchBar} */}
               <div className="w-[600px] p-5 rounded-lg">
                 <Input
-                  className="bg-[#061129] rounded-xl border-blue-950 focus:outline-none text-center"
+                  className="bg-[#061129] bg-opacity-50 rounded-xl border-blue-950 focus:outline-none text-center text-white placeholder:text-white"
                   placeholder="Explore"
+                  onChange={(e)=>setInputquery(e.target.value)}
+                  
                 />
               </div>
+              {/* Note Workspace */}
               <div className=" w-full h-screen">
-                <ScrollArea className=" h-screen w-full rounded-md  p-4">
-                  {/* FIXME: FIXME Here */}
+                <ScrollArea className=" h-[650px] w-full rounded-md  p-4">
+                  <div className="flex gap-5 shadow-2xl flex-wrap-reverse justify-evenly ">
+                  {workspaceList.map((doc, index) => (
+                    <div className="flex  gap-5 " key={index}>
+                      <Link to={`/workspace/${doc.workspaceId}`} >
+                      <WorkspaceCard
+                        coverImage={doc.coverImage}
+                        workspaceName={doc.workspaceName}
+                        tags={doc.tags}
+
+                      />
+                      </Link>
+                    </div>
+                  ))}
+                  </div>
+                  
                 </ScrollArea>
               </div>
             </div>
 
             {/* Note Card  & NewButton*/}
             <div className="w-[30%] flex flex-col justify-start gap-10 p-5">
-              <div className=" w-[300px] h-[80px]  flex items-center justify-center gap-5 bg-black rounded-3xl">
+              <div className=" w-[300px] h-[80px]  flex items-center justify-center gap-5 bg-black bg-opacity-50 rounded-3xl">
                 <Link to="/createworkspace">
-                  <Button className=" bg-rose-600 rounded-2xl" >
+                  <Button className=" bg-rose-600 rounded-2xl">
                     +New WorkSpace
                   </Button>
                 </Link>
@@ -88,13 +127,15 @@ export default function DashboardPage() {
                 </SignOutButton>
               </div>
               <div className="w-full h-screen flex flex-col justify-evenly gap-10">
-                <div className="bg-black opacity-50 w-full h-[200px]  p-5 flex flex-col gap-10">
-                  <h1 className='text-7xl text-white '>{totalworkspace}</h1>
-                  <p className='text-xl text-rose-700 font-bold'>Total number of WorkSpace</p>
+                <div className="bg-black bg-opacity-50 w-full h-[200px]  p-5 flex flex-col gap-10">
+                  <h1 className="text-7xl text-white">{totalWorkspace}</h1>
+                  <p className="text-3xl text-rose-300 font-bold">
+                     WorkSpace Available
+                  </p>
                 </div>
-                <div className="bg-black opacity-50 w-full h-[300px] text-white  p-5 flex flex-col justify-center items-center ">
+                <div className="bg-black bg-opacity-50 w-full h-[300px] text-white  p-5 flex flex-col justify-center items-center ">
                   <h1 className="text-3xl font-bold">Recently Visited</h1>
-                  <Tags/>
+                  <Tags />
                 </div>
               </div>
             </div>
@@ -104,4 +145,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-

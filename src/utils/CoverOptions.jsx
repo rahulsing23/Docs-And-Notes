@@ -39,5 +39,9 @@ export default [
       imageUrl:
         'https://img.freepik.com/free-vector/flat-design-abstract-background_23-2149102272.jpg?t=st=1728208125~exp=1728211725~hmac=2abaf94b6913c88e64a701485a65906df0b857af51aaf2fcd4be6fd8b54a45e2&w=996',
     },
+    {
+      imageUrl:
+        'https://img.freepik.com/free-photo/digital-art-moon-buildings-wallpaper_23-2150918703.jpg?t=st=1728579548~exp=1728583148~hmac=0100d590f47f51a8e810468c2d1f2bd7a19d1b38a23a21f212facddaf01236d5&w=1060',
+    },
   ];
   
