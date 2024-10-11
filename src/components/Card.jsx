@@ -4,6 +4,7 @@ import { motion } from "framer-motion"
 import Background from './Background';
 
 
+
 const Card = ({reference}) => {
     const [footerColor, setFooterColor] = useState();
     const [bodyColor, setBodyColor] = useState();

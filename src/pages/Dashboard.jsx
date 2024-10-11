@@ -8,7 +8,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import LogoIcon from '@/assets/icons/Logo5.jpg';
 import { useEffect, useRef, useState } from 'react';
 import Tags from '@/components/Tags';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, or, query, where } from 'firebase/firestore';
 import { db } from '@/firebase/firebase';
 import WorkspaceCard from '@/components/WorkspaceCard';
 
@@ -40,22 +40,39 @@ export default function DashboardPage() {
   };
 
   // Search Query
-  const handleSearchedQuery = () =>{
-      
+  const handleSearchedQuery = async () =>{
+    
+    const q = query(collection(db, "workspace"),
+      or(where('tags', '==', inputquery),
+         where('workspaceName', '==', inputquery)
+      )
+    );
+    const querySnapshot = await getDocs(q);
+    const Output = querySnapshot.docs.map((doc, index)=>(
+      {
+        id: doc.id,
+        ...doc.data(),
+      }
+    )) 
+    // setSearchedQueryOutput(Output)
+    setWorkspaceList(Output)
+    console.log(Output)
   }
 
 
   useEffect(() => {
     // Function to handle typing events
+    
+
     const handleTyping = (event) => {
       if (Inputref.current) {
         Inputref.current.focus();
         setSearchQuery((prevQuery) => prevQuery + event.key);
       }
     };
-
+    // console.log("searchQuery",searchedQueryOutput)
     // Add workspace function call
-    countDocumentsInCollection('workspace');
+    !inputquery && countDocumentsInCollection('workspace');
     // Add event listener for typing
     document.addEventListener('keydown', handleTyping);
 
