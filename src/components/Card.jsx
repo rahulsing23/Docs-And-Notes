@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { FaRegFileAlt } from 'react-icons/fa';
 import { motion } from "framer-motion"
 import Background from './Background';
+import { useUser } from '@clerk/clerk-react';
 
 
-
-const Card = ({reference}) => {
+const Card = ({reference, doc}) => {
     const [footerColor, setFooterColor] = useState();
     const [bodyColor, setBodyColor] = useState();
+    const {user} = useUser()
     useEffect(() => {
         function getRandomColorPair() {
 
@@ -24,7 +25,6 @@ const Card = ({reference}) => {
           }
          
           const cardColors = getRandomColorPair();
-          console.log(cardColors);
           setFooterColor(cardColors.darkColor)
           setBodyColor(cardColors.lightColor)
     }, []);
@@ -34,21 +34,39 @@ const Card = ({reference}) => {
     
       
   return (
-    <motion.div drag dragConstraints={reference}  whileDrag={{scale:1.1}} dragMomentum={false}  className="w-60 h-72 rounded-[30px] relative overflow-hidden" style={{backgroundColor: bodyColor}}>
-      <div className=" p-5">
-        <FaRegFileAlt />
-        <p className="text-sm mt-5 font-medium leading-2">
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Similique,
-          eum unde. Reprehenderit doloremque provident vel!
-        </p>
-      </div>
-
-      <div className="w-full footer absolute bottom-0  h-10 left-0 py-3" style={{backgroundColor: footerColor}}>
-        <div className="">
-            <h5></h5>
+    // <motion.div drag dragConstraints={reference}  whileDrag={{scale:1.1}} dragMomentum={false}  className="w-60 h-72 rounded-[30px] relative overflow-hidden" style={{backgroundColor: bodyColor}}>
+    <motion.div drag dragConstraints={reference} whileDrag={{scale:1.1}} dragMomentum={false}  className="w-[300px] rounded-lg shadow-md bg-white overflow-hidden p-4">
+      {/* Header Section */}
+      <div className="flex items-center p-4 border-b">
+        <img
+          src={user?.imageUrl} // Replace with the path to your profile image
+          alt={user?.fullName}
+          className="w-12 h-12 rounded-full"
+        />
+        <div className="ml-4">
+          <h2 className="text-lg font-semibold">{user?.fullName}</h2>
+          <p className="text-sm text-gray-500">IT Staff</p>
         </div>
       </div>
+
+      {/* Feedback Section */}
+      <div className="p-4">
+        <h3 className="text-md font-bold">{doc.title}</h3>
+        <p className="text-gray-700 h-32 overflow-y-auto ">
+          {doc?.description}
+        </p>
+      </div>
+      <div className="flex items-center justify-between">
+          <span className="text-gray-500">{doc?.createdOn}</span>
+          <span className="text-red-500 font-semibold">{doc?.priority}</span>
+      </div>
+      {/* Footer Section */}
+      <div className="flex justify-between items-center p-4 border-t">
+        
+      </div>
     </motion.div>
+  
+    // </motion.div>
   );
 };
 

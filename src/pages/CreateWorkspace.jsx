@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Loader2Icon, SmilePlus } from 'lucide-react';
+import { Loader2Icon } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import CoverPicker from './CoverPicker';
 import { db } from '@/firebase/firebase'
 import { doc, setDoc } from 'firebase/firestore';
-import { toast } from "sonner"
-
-import uuid4 from 'uuid4';
 import { useAuth, useUser } from '@clerk/clerk-react';
 import { Link, useNavigate } from 'react-router-dom';
 import WorkspaceTags from "@/components/WorkspaceTags"
@@ -23,7 +20,6 @@ function CreateWorkspace() {
   const [workspaceName, setWorkspaceName] = useState();
 
   const { user } = useUser()
-  const {orgId} = useAuth()
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [tags, settags] = useState();

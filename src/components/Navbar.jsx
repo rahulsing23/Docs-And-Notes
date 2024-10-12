@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import LogoIcon from '@/assets/icons/Logo5.jpg';
 import { UserButton, useUser } from '@clerk/clerk-react';
 import { Input } from './ui/input';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   const [inputquery, setInputquery] = useState("");
@@ -35,11 +36,14 @@ const Navbar = () => {
     },
   };
   const { user } = useUser();
-
+ 
 
   return (
     <div className="shadow-md flex justify-between items-center w-full h-[70px] p-5 bg-[#070f20]">
-      <img src={LogoIcon} alt="Keep Notes" height={100} width={200} />
+      <Link to="/">
+        <img src={LogoIcon} alt="Keep Notes" height={100} width={200} />
+      </Link>
+
       <div className="w-[600px] p-5 rounded-lg">
         <Input
           ref={Inputref}

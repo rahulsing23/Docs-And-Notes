@@ -63,15 +63,13 @@ export default function DashboardPage() {
   useEffect(() => {
     // Function to handle typing events
     
-
     const handleTyping = (event) => {
       if (Inputref.current) {
         Inputref.current.focus();
         setSearchQuery((prevQuery) => prevQuery + event.key);
       }
     };
-    // console.log("searchQuery",searchedQueryOutput)
-    // Add workspace function call
+    
     !inputquery && countDocumentsInCollection('workspace');
     // Add event listener for typing
     document.addEventListener('keydown', handleTyping);
