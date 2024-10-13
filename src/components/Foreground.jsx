@@ -7,10 +7,10 @@ import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '@/firebase/firebase';
 
 const Foreground = () => {
-  const ref = useRef(null);
+
   const { id } = useParams()
   const [documentList, DocumentList] = useState([]);
-
+  
   const DocumentFromCollection = async () =>{
     try {
       const q = query(collection(db, "workspaceDocument"),
@@ -41,12 +41,13 @@ const Foreground = () => {
         <Button className="bg-rose-600 rounded-lg h-[50px] w-[150px]">+New Notes</Button>       
        </Link> 
       </div>
-      <div ref={ref} className="w-full h-screen  top-0 left-0 z-[3] p-5">
+      <div  className="w-full h-screen  top-0 left-0 z-[3] p-5">
         <div className="grid grid-cols-5 gap-5 mt-10">
           {
               documentList.map((doc, index)=>(
-                <div className="flex gap-5 shadow-2xl flex-wrap-reverse justify-evenly">
-                  <Card reference={ref} doc={doc} key={index}/>
+                
+                <div className="flex gap-5 shadow-2xl flex-wrap-reverse justify-evenly rounded-lg">
+                  <Card  document={doc} key={index}/>
                 </div>
                 
               ))

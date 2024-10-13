@@ -43,6 +43,7 @@ const CreateNewDocument = () => {
   };
 
   const uploadFile = (file) => {
+    setLoading(true)
     const storageRef = ref(storage, `uploads/${file.name}`); // Create a reference to the file
 
     uploadBytes(storageRef, file)
@@ -53,10 +54,12 @@ const CreateNewDocument = () => {
         getDownloadURL(snapshot.ref).then((downloadURL) => {
           console.log('File available at', downloadURL);
           setFileUrl(downloadURL);
+          setLoading(false)
           // You can save this URL in your database or state
         });
       })
       .catch((error) => {
+        setLoading(false)
         console.error('Error uploading file:', error);
       });
   };

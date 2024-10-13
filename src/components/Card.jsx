@@ -1,71 +1,135 @@
 import React, { useEffect, useState } from 'react';
-import { FaRegFileAlt } from 'react-icons/fa';
-import { motion } from "framer-motion"
-import Background from './Background';
+import { FaEdit, FaLink, } from 'react-icons/fa';
+
 import { useUser } from '@clerk/clerk-react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { MdDeleteForever } from "react-icons/md";
+import { Link, useParams } from 'react-router-dom';
+import { doc, deleteDoc } from "firebase/firestore";
+import { db } from '@/firebase/firebase';
 
 
-const Card = ({reference, doc}) => {
-    const [footerColor, setFooterColor] = useState();
-    const [bodyColor, setBodyColor] = useState();
-    const {user} = useUser()
-    useEffect(() => {
-        function getRandomColorPair() {
 
-            const hue = Math.floor(Math.random() * 360);
-        
-            const saturation = 70; 
-            const lightnessLight = 85; 
-            const lightnessDark = 45; 
-          
-            const lightColor = `hsl(${hue}, ${saturation}%, ${lightnessLight}%)`;
-            const darkColor = `hsl(${hue}, ${saturation}%, ${lightnessDark}%)`;
-      
-            return { lightColor, darkColor };
-          }
-         
-          const cardColors = getRandomColorPair();
-          setFooterColor(cardColors.darkColor)
-          setBodyColor(cardColors.lightColor)
-    }, []);
 
+const Card = ({ document }) => {
+  const [footerColor, setFooterColor] = useState();
+  const [bodyColor, setBodyColor] = useState();
+  const { user } = useUser();
+  const {id} = useParams()
+
+
+  useEffect(() => {
+    function getRandomColorPair() {
+      const hue = Math.floor(Math.random() * 360);
+
+      const saturation = 70;
+      const lightnessLight = 85;
+      const lightnessDark = 45;
+
+      const lightColor = `hsl(${hue}, ${saturation}%, ${lightnessLight}%)`;
+      const darkColor = `hsl(${hue}, ${saturation}%, ${lightnessDark}%)`;
+
+      return { lightColor, darkColor };
+    }
+
+    const cardColors = getRandomColorPair();
+    setFooterColor(cardColors.darkColor);
+    setBodyColor(cardColors.lightColor);
+  }, []);
+
+  const priorityTagColor = {
+    High: 'text-red-500 font-semibold',
+    Low: 'text-green-500 font-semibold',
+    Medium: 'text-blue-500 font-semibold',
+  };
+
+  const handleDeleteCard = async () =>{
+    try {
+      await deleteDoc(doc(db, "workspaceDocument", document.id));
+      location.reload()
+    } catch (error) {
+      console.log("Error in handle delete function :: ", error.message)
+    }
+  }
    
-  
-    
-      
   return (
-    // <motion.div drag dragConstraints={reference}  whileDrag={{scale:1.1}} dragMomentum={false}  className="w-60 h-72 rounded-[30px] relative overflow-hidden" style={{backgroundColor: bodyColor}}>
-    <motion.div drag dragConstraints={reference} whileDrag={{scale:1.1}} dragMomentum={false}  className="w-[300px] rounded-lg shadow-md bg-white overflow-hidden p-4">
+    <div  
+      className="w-[300px]  rounded-lg shadow-md bg-white overflow-hidden flex flex-col justify-between"
+    >
       {/* Header Section */}
-      <div className="flex items-center p-4 border-b">
+      <div className="flex items-center p-5 border-b">
         <img
           src={user?.imageUrl} // Replace with the path to your profile image
           alt={user?.fullName}
-          className="w-12 h-12 rounded-full"
+          className="w-10 h-10 rounded-full"
         />
         <div className="ml-4">
           <h2 className="text-lg font-semibold">{user?.fullName}</h2>
-          <p className="text-sm text-gray-500">IT Staff</p>
+          <p className={priorityTagColor[document.priority]}>Priority: {document?.priority}</p>
+
         </div>
       </div>
 
       {/* Feedback Section */}
-      <div className="p-4">
-        <h3 className="text-md font-bold">{doc.title}</h3>
-        <p className="text-gray-700 h-32 overflow-y-auto ">
-          {doc?.description}
-        </p>
+      <div className="p-5">
+        <h3 className="text-md font-bold">{document.title}</h3>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <p className="text-gray-700 h-[70px] overflow-ellipsis overflow-hidden text-left ">
+                {document?.description}
+              </p>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p className='w-[300px] p-5 text-pretty'>{document?.description}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between p-5">
+        <div className="flex flex-col">
+          <p>CreatedOn:</p>
           <span className="text-gray-500">{doc?.createdOn}</span>
-          <span className="text-red-500 font-semibold">{doc?.priority}</span>
+
+        </div>
+        <div className="">
+          
+        </div>
       </div>
       {/* Footer Section */}
-      <div className="flex justify-between items-center p-4 border-t">
+      <div className="flex justify-between items-center p-4 border-t "  style={{backgroundColor: bodyColor}}>
+        
+        <div className="flex gap-5 justify-between w-full">
+        {document.downloadURL ? 
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger><FaLink  /> </TooltipTrigger>
+              <TooltipContent>
+                {/* FIXME: */}
+                <p>Document Name</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+           : <h1>No file Uploaded</h1>}
+            
+            <div className="flex gap-2">
+            <Link to={`/workspace/${id}/create-document`}><FaEdit /></Link> 
+              <MdDeleteForever onClick={handleDeleteCard} className='text-lg'/>
+            </div>
+        </div>
+     
+        
+        
+       
         
       </div>
-    </motion.div>
-  
+    </div>
+
     // </motion.div>
   );
 };
