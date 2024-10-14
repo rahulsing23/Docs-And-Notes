@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FaEdit, FaLink, } from 'react-icons/fa';
+import { FaEdit, FaLink } from 'react-icons/fa';
 
 import { useUser } from '@clerk/clerk-react';
 import {
@@ -8,20 +8,16 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { MdDeleteForever } from "react-icons/md";
+import { MdDeleteForever } from 'react-icons/md';
 import { Link, useParams } from 'react-router-dom';
-import { doc, deleteDoc } from "firebase/firestore";
+import { doc, deleteDoc } from 'firebase/firestore';
 import { db } from '@/firebase/firebase';
-
-
-
 
 const Card = ({ document }) => {
   const [footerColor, setFooterColor] = useState();
   const [bodyColor, setBodyColor] = useState();
   const { user } = useUser();
-  const {id} = useParams()
-
+  const { id } = useParams();
 
   useEffect(() => {
     function getRandomColorPair() {
@@ -48,19 +44,18 @@ const Card = ({ document }) => {
     Medium: 'text-blue-500 font-semibold',
   };
 
-  const handleDeleteCard = async () =>{
+  const handleDeleteCard = async () => {
     try {
-      await deleteDoc(doc(db, "workspaceDocument", document.id));
-      location.reload()
+      await deleteDoc(doc(db, 'workspaceDocument', document.id));
+      location.reload();
     } catch (error) {
-      console.log("Error in handle delete function :: ", error.message)
+      console.log('Error in handle delete function :: ', error.message);
     }
-  }
-   
+  };
+
+  const getUploadedFileName = () => {};
   return (
-    <div  
-      className="w-[300px]  rounded-lg shadow-md bg-white overflow-hidden flex flex-col justify-between"
-    >
+    <div className="w-[300px]  rounded-lg shadow-md bg-white overflow-hidden flex flex-col justify-between">
       {/* Header Section */}
       <div className="flex items-center p-5 border-b">
         <img
@@ -70,8 +65,9 @@ const Card = ({ document }) => {
         />
         <div className="ml-4">
           <h2 className="text-lg font-semibold">{user?.fullName}</h2>
-          <p className={priorityTagColor[document.priority]}>Priority: {document?.priority}</p>
-
+          <p className={priorityTagColor[document.priority]}>
+            Priority: {document?.priority}
+          </p>
         </div>
       </div>
 
@@ -85,48 +81,64 @@ const Card = ({ document }) => {
                 {document?.description}
               </p>
             </TooltipTrigger>
-            <TooltipContent>
-              <p className='w-[300px] p-5 text-pretty'>{document?.description}</p>
+            <TooltipContent className="ml-5">
+              <p className="w-[700px] h-[300px] overflow-auto p-5 text-left">
+                {document?.description}
+              </p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
       </div>
-      <div className="flex items-center justify-between p-5">
+      <div className="flex items-center justify-between p-5 ">
         <div className="flex flex-col">
-          <p>CreatedOn:</p>
-          <span className="text-gray-500">{doc?.createdOn}</span>
-
+          <p className="text-sm">CreatedOn:</p>
+          <span className="text-gray-500 text-sm">{document?.createdOn}</span>
         </div>
-        <div className="">
-          
-        </div>
+        <div className=""></div>
       </div>
+      
       {/* Footer Section */}
-      <div className="flex justify-between items-center p-4 border-t "  style={{backgroundColor: bodyColor}}>
-        
+      <div
+        className="flex justify-between items-center p-4 border-t "
+        style={{ backgroundColor: bodyColor }}
+      >
         <div className="flex gap-5 justify-between w-full">
-        {document.downloadURL ? 
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger><FaLink  /> </TooltipTrigger>
-              <TooltipContent>
-                {/* FIXME: */}
-                <p>Document Name</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-           : <h1>No file Uploaded</h1>}
-            
-            <div className="flex gap-2">
-            <Link to={`/workspace/${id}/create-document`}><FaEdit /></Link> 
-              <MdDeleteForever onClick={handleDeleteCard} className='text-lg'/>
-            </div>
+          {document.downloadURL ? (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <a href={document.downloadURL} target="_blank">
+                    <FaLink />{' '}
+                  </a>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{document.uploadedfileName}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          ) : (
+            <h1>No file Uploaded</h1>
+          )}
+
+          <div className="flex gap-2 items-center">
+            <Link to={`/workspace/${id}/create-document`}>
+              <FaEdit />
+            </Link>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <MdDeleteForever
+                    onClick={handleDeleteCard}
+                    className="text-lg"
+                  />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Delete</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
         </div>
-     
-        
-        
-       
-        
       </div>
     </div>
 

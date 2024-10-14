@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 const WorkspaceCard = ({ coverImage, workspaceName, tags }) => {
   return (
-    <div className=" shadow-red-950 rounded-3xl w-[300px] border-blue-950 border-[1px]">
+    <div className=" shadow-red-950 rounded-3xl w-[250px] border-blue-950 border-[1px]">
       <div className="relative group cursor-pointer">
         <div className="group-hover:opacity-40 cursor-pointer ">
           <img
@@ -20,7 +20,7 @@ const WorkspaceCard = ({ coverImage, workspaceName, tags }) => {
             alt="Cover Image"
             width={400}
             height={400}
-            className="w-full h-[200px] object-cover  rounded-3xl"
+            className="w-full h-[150px] object-cover  rounded-3xl"
           />
         </div>
       </div>

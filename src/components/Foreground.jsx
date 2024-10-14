@@ -46,7 +46,7 @@ const Foreground = () => {
           {
               documentList.map((doc, index)=>(
                 
-                <div className="flex gap-5 shadow-2xl flex-wrap-reverse justify-evenly rounded-lg">
+                <div className="flex gap-5 shadow-2xl flex-wrap-reverse justify-evenly rounded-lg" key={index}>
                   <Card  document={doc} key={index}/>
                 </div>
                 

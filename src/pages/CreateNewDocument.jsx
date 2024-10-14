@@ -18,11 +18,13 @@ const paragraph =
 const CreateNewDocument = () => {
   const { user } = useUser();
   const { id } = useParams();
-  const [fileUrl, setFileUrl] = useState();
+  const [fileUrl, setFileUrl] = useState("");
   const [title, settitle] = useState('');
   const [description, setDescription] = useState();
   const [priority, setPriority] = useState();
   const [loading, setLoading] = useState(false);
+  const [uploadedfileName, setUploadedfileName] = useState(null);
+  const [uploadfileData, setUploadfileData] = useState();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -42,58 +44,73 @@ const CreateNewDocument = () => {
     },
   };
 
-  const uploadFile = (file) => {
-    setLoading(true)
-    const storageRef = ref(storage, `uploads/${file.name}`); // Create a reference to the file
-
-    uploadBytes(storageRef, file)
-      .then((snapshot) => {
-        console.log('Uploaded a blob or file!', snapshot);
-
-        // Get the download URL
-        getDownloadURL(snapshot.ref).then((downloadURL) => {
-          console.log('File available at', downloadURL);
-          setFileUrl(downloadURL);
-          setLoading(false)
-          // You can save this URL in your database or state
-        });
-      })
-      .catch((error) => {
-        setLoading(false)
-        console.error('Error uploading file:', error);
-      });
+  const uploadFile = async (file) => {
+    if(file == null)
+      return  { fileUrl, uploadedfileName };
+    try {
+      setLoading(true);
+      const storageRef = ref(storage, `uploads/${file.name}`); 
+  
+      const snapshot = await uploadBytes(storageRef, file); 
+      console.log('Uploaded a blob or file!', snapshot);
+  
+      const fileSnap = snapshot.metadata.fullPath.split("/")[1];
+      const uploadedfileName = fileSnap.toString();  
+      console.log(uploadedfileName);
+  
+      // Get the download URL
+      const downloadURL = await getDownloadURL(snapshot.ref);  
+  
+      setFileUrl(downloadURL);
+      setUploadedfileName(uploadedfileName);
+      setLoading(false);
+  
+      return { downloadURL, uploadedfileName };  
+    } catch (error) {
+      setLoading(false);
+      console.error('Error uploading file:', error);
+      throw error;  
+    }
   };
+  
 
   const handleUploadFile = (event) => {
     const file = event.target.files[0];
     if (file) {
-      uploadFile(file);
+      setUploadfileData(file);
     }
   };
 
   const handleCreateDocument = async (e) => {
-      e.preventDefault(); 
-
+    e.preventDefault();
+  
     try {
       setLoading(true);
+  
+      // Await the uploadFile function to complete and get the download URL and file name
+      const { downloadURL, uploadedfileName } = await uploadFile(uploadfileData);
+  
       const docId = uuid4();
       await setDoc(doc(db, 'workspaceDocument', docId.toString()), {
         workspaceId: id.toString(),
         documentId: docId.toString(),
         title: title,
         description: description,
-        downloadURL: fileUrl || "",
+        downloadURL: downloadURL || "",  // Set download URL
         createdOn: new Date().toLocaleDateString(),
         priority: priority,
         createdBy: user?.fullName,
+        uploadedfileName: uploadedfileName || null,  // Set uploaded file name
       });
+  
       setLoading(false);
       navigate('/workspace/' + id); 
     } catch (error) {
       setLoading(false);
-      console.error('Error:: Error In Create New Document Page', error);
+      console.error('Error In Create New Document Page :: ', error);
     }
   };
+  
 
   return (
     <>
