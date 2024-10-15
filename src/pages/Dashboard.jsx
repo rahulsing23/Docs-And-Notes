@@ -43,8 +43,8 @@ export default function DashboardPage() {
   const handleSearchedQuery = async () =>{
     
     const q = query(collection(db, "workspace"),
-      or(where('tags', '==', inputquery),
-         where('workspaceName', '==', inputquery)
+      or(where('tags', '==', inputquery.toLowerCase()),
+         where('workspaceName', '==', inputquery.toLowerCase())
       )
     );
     const querySnapshot = await getDocs(q);
@@ -55,7 +55,7 @@ export default function DashboardPage() {
       }
     )) 
     // setSearchedQueryOutput(Output)
-    setWorkspaceList(Output)
+    setWorkspaceList(Output) 
     console.log(Output)
   }
 

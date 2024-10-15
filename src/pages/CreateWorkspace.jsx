@@ -33,10 +33,10 @@ function CreateWorkspace() {
 
       await setDoc(doc(db, "workspace", workspaceId.toString()), {
         workspaceId: workspaceId,
-        workspaceName: workspaceName,
+        workspaceName: workspaceName.toLowerCase(),
         coverImage: coverImage,
         createBy: user?.primaryEmailAddress.emailAddress,
-        tags: tags
+        tags: tags.toLowerCase()
       })
 
       setLoading(false) 
@@ -55,7 +55,7 @@ function CreateWorkspace() {
           <GiCancel  className="h-4 w-4" />
           <AlertTitle>Heads up!</AlertTitle>
           <AlertDescription>
-            error.message
+            {error.message}
           </AlertDescription>
         </Alert>
         }

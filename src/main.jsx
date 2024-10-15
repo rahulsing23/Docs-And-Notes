@@ -15,6 +15,7 @@ import SignInPage from './pages/Sign-In'
 import SignUpPage from './pages/Sign-up'
 import DashboardPage from './pages/Dashboard'
 import CreateNewDocument from './pages/CreateNewDocument'
+import EditDocument from './pages/EditDocument'
 
 
 const router = createBrowserRouter([
@@ -33,6 +34,7 @@ const router = createBrowserRouter([
           { path: '/createworkspace', element: <CreateWorkspace /> },
           { path: '/workspace/:id', element: <WorkspacePage /> },
           { path: '/workspace/:id/create-document', element: <CreateNewDocument /> },
+          { path: '/workspace/:id/:docId/edit-document', element: <EditDocument /> },
 
         ],
       },

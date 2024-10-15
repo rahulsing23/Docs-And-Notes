@@ -9,27 +9,38 @@ import 'firebase/compat/storage';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../firebase/firebase';
 import { Button } from '@/components/ui/button';
-import { doc, setDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, query, setDoc, updateDoc } from 'firebase/firestore';
 import uuid4 from 'uuid4';
 
 const paragraph =
   'Effective note-making is a crucial skill for enhancing learning and retention. By summarizing key points, using bullet lists, and incorporating visuals, individuals can create organized and engaging notes. Regular review and personalization of note-taking methods cater to unique learning styles, fostering deeper understanding and improving overall academic performance.';
 
-const CreateNewDocument = () => {
+const EditDocument = () => {
   const { user } = useUser();
-  const { id } = useParams();
-  const [fileUrl, setFileUrl] = useState("");
+  const { docId } = useParams();
+  
+  const [fileUrl, setFileUrl] = useState('');
   const [title, settitle] = useState('');
   const [description, setDescription] = useState();
   const [priority, setPriority] = useState();
   const [loading, setLoading] = useState(false);
   const [uploadedfileName, setUploadedfileName] = useState(null);
   const [uploadfileData, setUploadfileData] = useState();
+  const [oldData, setOldData] = useState();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log(id.toString());
-  }, []);
+    useEffect(() => {
+        const getOldData = async()=>{
+            try {
+                const oldSnap = await getDoc(doc(db, "workspaceDocument", docId.toString()))
+                console.log(oldSnap.data())
+                setOldData(oldSnap.data())
+            } catch (error) {
+                console.log("Error in getOldData function :: ", error.message)
+            }
+        }
+        getOldData()
+    }, []);
 
   // Handle radio button change
   const handlePriorityChange = (event) => {
@@ -45,34 +56,32 @@ const CreateNewDocument = () => {
   };
 
   const uploadFile = async (file) => {
-    if(file == null)
-      return  { fileUrl, uploadedfileName };
+    if (file == null) return { fileUrl, uploadedfileName };
     try {
       setLoading(true);
-      const storageRef = ref(storage, `uploads/${file.name}`); 
-  
-      const snapshot = await uploadBytes(storageRef, file); 
+      const storageRef = ref(storage, `uploads/${file.name}`);
+
+      const snapshot = await uploadBytes(storageRef, file);
       console.log('Uploaded a blob or file!', snapshot);
-  
-      const fileSnap = snapshot.metadata.fullPath.split("/")[1];
-      const uploadedfileName = fileSnap.toString();  
+
+      const fileSnap = snapshot.metadata.fullPath.split('/')[1];
+      const uploadedfileName = fileSnap.toString();
       console.log(uploadedfileName);
-  
+
       // Get the download URL
-      const downloadURL = await getDownloadURL(snapshot.ref);  
-  
+      const downloadURL = await getDownloadURL(snapshot.ref);
+
       setFileUrl(downloadURL);
       setUploadedfileName(uploadedfileName);
       setLoading(false);
-  
-      return { downloadURL, uploadedfileName };  
+
+      return { downloadURL, uploadedfileName };
     } catch (error) {
       setLoading(false);
       console.error('Error uploading file:', error);
-      throw error;  
+      throw error;
     }
   };
-  
 
   const handleUploadFile = (event) => {
     const file = event.target.files[0];
@@ -81,36 +90,41 @@ const CreateNewDocument = () => {
     }
   };
 
-  const handleCreateDocument = async (e) => {
+  const handleUpdateDocument = async (e) => {
     e.preventDefault();
-  
+
     try {
       setLoading(true);
-  
-      // Await the uploadFile function to complete and get the download URL and file name
       const { downloadURL, uploadedfileName } = await uploadFile(uploadfileData);
-  
-      const docId = uuid4();
-      await setDoc(doc(db, 'workspaceDocument', docId.toString()), {
-        workspaceId: id.toString(),
-        documentId: docId.toString(),
-        title: title.toLowerCase(),
-        description: description,
-        downloadURL: downloadURL || "",  // Set download URL
-        createdOn: new Date().toLocaleDateString(),
-        priority: priority.toLowerCase(),
-        createdBy: user?.fullName,
-        uploadedfileName: uploadedfileName || null,  // Set uploaded file name
-      });
-  
+      const data = {
+        modifiedDate: new Date().toLocaleDateString()
+      }
+      if(title){
+        data["title"] = title
+      }
+      if(description)
+      {
+        data["description"] = description
+      }
+      if(downloadURL){
+        data["downloadURL"] = downloadURL
+      }
+      if(uploadedfileName){
+        data["uploadedfileName"] = uploadedfileName
+      }
+      if(priority){
+        data["priority"] = priority
+      }
+
+      await updateDoc(doc(db, 'workspaceDocument', docId.toString()), data);
+
       setLoading(false);
-      navigate('/workspace/' + id); 
+      navigate('/workspace/' + oldData.workspaceId);
     } catch (error) {
       setLoading(false);
-      console.error('Error In Create New Document Page :: ', error);
+      console.error('Error In Update Document Page :: ', error);
     }
   };
-  
 
   return (
     <>
@@ -151,7 +165,7 @@ const CreateNewDocument = () => {
                   </div>
 
                   <div className="rounded-lg bg-white p-8 shadow-lg lg:col-span-3 lg:p-12">
-                    <form className="space-y-4" onSubmit={handleCreateDocument}>
+                    <form className="space-y-4" onSubmit={handleUpdateDocument}>
                       <div>
                         <label className="sr-only" htmlFor="title">
                           Title
@@ -161,6 +175,7 @@ const CreateNewDocument = () => {
                           placeholder="Title"
                           type="text"
                           id="title"
+                          defaultValue = {oldData && oldData.title}
                           onChange={(e) => settitle(e.target.value)}
                         />
                       </div>
@@ -233,6 +248,7 @@ const CreateNewDocument = () => {
                           placeholder="Write here"
                           rows="5"
                           id="message"
+                          defaultValue = {oldData && oldData.description}
                           onChange={(e) => setDescription(e.target.value)}
                         ></Textarea>
                       </div>
@@ -262,7 +278,7 @@ const CreateNewDocument = () => {
                           className=" w-full rounded-lg bg-black px-5 py-3 font-medium text-white sm:w-auto"
                           disabled={loading}
                         >
-                          {loading ? 'Creating...' : 'Create Notes'}
+                          {loading ? 'Updating...' : 'Update Notes'}
                         </Button>
                       </div>
                     </form>
@@ -277,4 +293,4 @@ const CreateNewDocument = () => {
   );
 };
 
-export default CreateNewDocument;
+export default EditDocument;

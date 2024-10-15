@@ -73,7 +73,7 @@ const Card = ({ document }) => {
 
       {/* Feedback Section */}
       <div className="p-5">
-        <h3 className="text-md font-bold">{document.title}</h3>
+        <h3 className="text-md font-bold capitalize">{document.title}</h3>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>
@@ -94,9 +94,13 @@ const Card = ({ document }) => {
           <p className="text-sm">CreatedOn:</p>
           <span className="text-gray-500 text-sm">{document?.createdOn}</span>
         </div>
+        {document.modifiedDate && <div className="flex flex-col">
+          <p className="text-sm">ModifiedOn:</p>
+          <span className="text-gray-500 text-sm">{document?.modifiedDate}</span>
+        </div>}
         <div className=""></div>
       </div>
-      
+
       {/* Footer Section */}
       <div
         className="flex justify-between items-center p-4 border-t "
@@ -121,9 +125,20 @@ const Card = ({ document }) => {
           )}
 
           <div className="flex gap-2 items-center">
-            <Link to={`/workspace/${id}/create-document`}>
-              <FaEdit />
-            </Link>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Link to={`/workspace/${id}/${document.documentId}/edit-document`}>
+                    <FaEdit />
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <Link to={`/workspace/${id}/${document.documentId}/edit-document`}>
+                    <p>Edit</p>
+                  </Link>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>
@@ -133,7 +148,7 @@ const Card = ({ document }) => {
                   />
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Delete</p>
+                  <p onClick={handleDeleteCard} className='cursor-pointer'>Delete</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
