@@ -1,9 +1,7 @@
 import { Link } from 'react-router-dom';
-
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { SignOutButton, UserButton, useUser } from '@clerk/clerk-react';
-
 import { ScrollArea } from '@/components/ui/scroll-area';
 import LogoIcon from '@/assets/icons/Logo5.jpg';
 import { useEffect, useRef, useState } from 'react';
@@ -14,32 +12,28 @@ import WorkspaceCard from '@/components/WorkspaceCard';
 
 export default function DashboardPage() {
   const { user } = useUser();
-  const [workspaceList, setWorkspaceList] = useState([]); // State to store the document data
+  const [workspaceList, setWorkspaceList] = useState([]); 
   const [totalWorkspace, setTotalWorkspace] = useState(0);
   const [inputquery, setInputquery] = useState("");
   const [searchQuery, setSearchQuery] = useState('');
   const Inputref = useRef()
 
-  // Add workspace
   const countDocumentsInCollection = async (collectionName) => {
     try {
       const querySnapshot = await getDocs(collection(db, collectionName));
 
-      // Convert documents to an array of data
       const workspaceData = querySnapshot.docs.map((doc, index) => ({
         id: doc.id,
-        ...doc.data(), // Spreading document data and id
+        ...doc.data(),
       }));
 
-      // Setting the document list in state
       setWorkspaceList(workspaceData);
-      setTotalWorkspace(querySnapshot.size); // Set the total number of documents
+      setTotalWorkspace(querySnapshot.size); 
     } catch (error) {
       console.error('Error counting documents: ', error);
     }
   };
 
-  // Search Query
   const handleSearchedQuery = async () =>{
     
     const q = query(collection(db, "workspace"),
@@ -54,14 +48,12 @@ export default function DashboardPage() {
         ...doc.data(),
       }
     )) 
-    // setSearchedQueryOutput(Output)
     setWorkspaceList(Output) 
     console.log(Output)
   }
 
 
   useEffect(() => {
-    // Function to handle typing events
     
     const handleTyping = (event) => {
       if (Inputref.current) {
@@ -71,10 +63,9 @@ export default function DashboardPage() {
     };
     
     !inputquery && countDocumentsInCollection('workspace');
-    // Add event listener for typing
+
     document.addEventListener('keydown', handleTyping);
 
-    // Clean up event listener when component unmounts
     return () => {
       document.removeEventListener('keydown', handleTyping);
     };
@@ -142,14 +133,11 @@ export default function DashboardPage() {
                   <div className="flex gap-5 shadow-2xl flex-wrap-reverse justify-evenly ">
                   {workspaceList.map((doc, index) => (
                     <div className="flex  gap-5 " key={index}>
-                      <Link to={`/workspace/${doc.workspaceId}`} >
+                      
                       <WorkspaceCard
-                        coverImage={doc.coverImage}
-                        workspaceName={doc.workspaceName}
-                        tags={doc.tags}
-
+                        workspaceSnap={doc}
                       />
-                      </Link>
+                    
                     </div>
                   ))}
                   </div>

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { FaEdit, FaLink } from 'react-icons/fa';
-
 import { useUser } from '@clerk/clerk-react';
 import {
   Tooltip,
@@ -11,7 +10,8 @@ import {
 import { MdDeleteForever } from 'react-icons/md';
 import { Link, useParams } from 'react-router-dom';
 import { doc, deleteDoc } from 'firebase/firestore';
-import { db } from '@/firebase/firebase';
+import { db, storage } from '@/firebase/firebase';
+import {  ref, deleteObject } from "firebase/storage";
 
 const Card = ({ document }) => {
   const [footerColor, setFooterColor] = useState();
@@ -43,9 +43,20 @@ const Card = ({ document }) => {
     Low: 'text-green-500 font-semibold',
     Medium: 'text-blue-500 font-semibold',
   };
-
+  
   const handleDeleteCard = async () => {
+    console.log(document.uploadedfileName)
     try {
+      if(document.downloadURL){
+        const desertRef = ref(storage, `uploads/${document.uploadedfileName}`);
+
+          // Delete the file
+          deleteObject(desertRef).then(() => {
+            console.log("File delete successfully")
+          }).catch((error) => {
+            console.log('Error in handle storage data deletion function :: ', error.message);
+          });
+      }
       await deleteDoc(doc(db, 'workspaceDocument', document.id));
       location.reload();
     } catch (error) {
@@ -53,13 +64,13 @@ const Card = ({ document }) => {
     }
   };
 
-  const getUploadedFileName = () => {};
+  
   return (
     <div className="w-[300px]  rounded-lg shadow-md bg-white overflow-hidden flex flex-col justify-between">
       {/* Header Section */}
       <div className="flex items-center p-5 border-b">
         <img
-          src={user?.imageUrl} // Replace with the path to your profile image
+          src={user?.imageUrl} 
           alt={user?.fullName}
           className="w-10 h-10 rounded-full"
         />
@@ -157,7 +168,7 @@ const Card = ({ document }) => {
       </div>
     </div>
 
-    // </motion.div>
+  
   );
 };
 

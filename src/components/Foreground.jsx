@@ -81,6 +81,7 @@ const Foreground = () => {
   return (
     <div className='w-full h-screen p-5'>
       <div className="w-full h-[80px]  flex justify-end items-center">
+        
       <div className="w-[600px] p-5 rounded-lg">
         <Input
           ref={Inputref}

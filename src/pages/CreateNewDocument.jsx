@@ -96,11 +96,11 @@ const CreateNewDocument = () => {
         documentId: docId.toString(),
         title: title.toLowerCase(),
         description: description,
-        downloadURL: downloadURL || "",  // Set download URL
+        downloadURL: downloadURL || "",  
         createdOn: new Date().toLocaleDateString(),
         priority: priority.toLowerCase(),
         createdBy: user?.fullName,
-        uploadedfileName: uploadedfileName || null,  // Set uploaded file name
+        uploadedfileName: uploadedfileName || null,  
       });
   
       setLoading(false);
