@@ -17,32 +17,35 @@ import CreateNewDocument from './pages/CreateNewDocument'
 import CreateWorkspace from './pages/CreateWorkspace'
 import WorkspacePage from "./pages/WorkspacePage"
 import EditDocument from './pages/EditDocument'
+import SecureWorkspace from './pages/SecureWorkspace'
 
 
 const router = createBrowserRouter([
   {
     element: <RootLayout />,
     children: [
-
- 
       { path: '/sign-in/*', element: <SignInPage /> },
       { path: '/sign-up/*', element: <SignUpPage /> },
       {
         element: <DashboardLayout />,
-        
         children: [
           { path: '/', element: <DashboardPage /> },
           { path: '/createworkspace', element: <CreateWorkspace /> },
-          { path: '/workspace/:id', element: (<WorkSpaceLayout><WorkspacePage /></WorkSpaceLayout>) },
-          { path: '/workspace/:id/create-document', element: <CreateNewDocument /> },
-          { path: '/workspace/:id/:docId/edit-document', element: <EditDocument /> },
-
-        ],
-      },
-    
-    ],
+          {
+            path: '/workspace/:workspaceName/:id',
+            element: <WorkSpaceLayout />, 
+            children: [
+              { path: '', element: <WorkspacePage /> }, 
+              { path: 'create-document', element: <CreateNewDocument /> }, 
+              { path: ':docId/edit-document', element: <EditDocument /> },  
+              { path: 'secure', element: <SecureWorkspace /> },  
+            ]
+          },
+        ]
+      }
+    ]
   },
-])
+]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

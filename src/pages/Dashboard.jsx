@@ -137,7 +137,6 @@ export default function DashboardPage() {
                       <WorkspaceCard
                         workspaceSnap={doc}
                       />
-                    
                     </div>
                   ))}
                   </div>

@@ -7,11 +7,23 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+
 import { MdDeleteForever } from 'react-icons/md';
 import { Link, useParams } from 'react-router-dom';
 import { doc, deleteDoc } from 'firebase/firestore';
 import { db, storage } from '@/firebase/firebase';
-import {  ref, deleteObject } from "firebase/storage";
+import { ref, deleteObject } from 'firebase/storage';
 
 const Card = ({ document }) => {
   const [footerColor, setFooterColor] = useState();
@@ -39,22 +51,27 @@ const Card = ({ document }) => {
   }, []);
 
   const priorityTagColor = {
-    High: 'text-red-500 font-semibold',
-    Low: 'text-green-500 font-semibold',
-    Medium: 'text-blue-500 font-semibold',
+    high: 'text-red-500 font-semibold capitalize',
+    low: 'text-green-500 font-semibold capitalize',
+    medium: 'text-blue-500 font-semibold capitalize',
   };
-  
+
   const handleDeleteCard = async () => {
-    console.log(document.uploadedfileName)
+    console.log(document.uploadedfileName);
     try {
-      if(document.downloadURL){
+      if (document.downloadURL) {
         const desertRef = ref(storage, `uploads/${document.uploadedfileName}`);
 
-          // Delete the file
-          deleteObject(desertRef).then(() => {
-            console.log("File delete successfully")
-          }).catch((error) => {
-            console.log('Error in handle storage data deletion function :: ', error.message);
+        // Delete the file
+        deleteObject(desertRef)
+          .then(() => {
+            console.log('File delete successfully');
+          })
+          .catch((error) => {
+            console.log(
+              'Error in handle storage data deletion function :: ',
+              error.message
+            );
           });
       }
       await deleteDoc(doc(db, 'workspaceDocument', document.id));
@@ -64,13 +81,12 @@ const Card = ({ document }) => {
     }
   };
 
-  
   return (
     <div className="w-[300px]  rounded-lg shadow-md bg-white overflow-hidden flex flex-col justify-between">
       {/* Header Section */}
       <div className="flex items-center p-5 border-b">
         <img
-          src={user?.imageUrl} 
+          src={user?.imageUrl}
           alt={user?.fullName}
           className="w-10 h-10 rounded-full"
         />
@@ -88,12 +104,12 @@ const Card = ({ document }) => {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>
-              <p className="text-gray-700 h-[70px] overflow-ellipsis overflow-hidden text-left ">
+              <p className="text-gray-700 h-[70px] overflow-ellipsis overflow-hidden text-left capitalize">
                 {document?.description}
               </p>
             </TooltipTrigger>
             <TooltipContent className="ml-5">
-              <p className="w-[700px] h-[300px] overflow-auto p-5 text-left">
+              <p className="w-[700px] h-[300px] overflow-auto p-5 text-left capitalize">
                 {document?.description}
               </p>
             </TooltipContent>
@@ -105,10 +121,14 @@ const Card = ({ document }) => {
           <p className="text-sm">CreatedOn:</p>
           <span className="text-gray-500 text-sm">{document?.createdOn}</span>
         </div>
-        {document.modifiedDate && <div className="flex flex-col">
-          <p className="text-sm">ModifiedOn:</p>
-          <span className="text-gray-500 text-sm">{document?.modifiedDate}</span>
-        </div>}
+        {document.modifiedDate && (
+          <div className="flex flex-col">
+            <p className="text-sm">ModifiedOn:</p>
+            <span className="text-gray-500 text-sm">
+              {document?.modifiedDate}
+            </span>
+          </div>
+        )}
         <div className=""></div>
       </div>
 
@@ -139,12 +159,16 @@ const Card = ({ document }) => {
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>
-                  <Link to={`/workspace/${id}/${document.documentId}/edit-document`}>
+                  <Link
+                    to={`/workspace/${id}/${document.documentId}/edit-document`}
+                  >
                     <FaEdit />
                   </Link>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <Link to={`/workspace/${id}/${document.documentId}/edit-document`}>
+                  <Link
+                    to={`/workspace/${id}/${document.documentId}/edit-document`}
+                  >
                     <p>Edit</p>
                   </Link>
                 </TooltipContent>
@@ -153,13 +177,34 @@ const Card = ({ document }) => {
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>
-                  <MdDeleteForever
-                    onClick={handleDeleteCard}
-                    className="text-lg"
-                  />
+                  <AlertDialog>
+                    <AlertDialogTrigger className='mt-1'>
+                      <MdDeleteForever className="text-lg" />
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>
+                          Are you absolutely sure?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This action cannot be undone. This will permanently
+                          delete your card and remove your data from our
+                          servers.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleDeleteCard}>
+                          Continue
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p onClick={handleDeleteCard} className='cursor-pointer'>Delete</p>
+                  <p onClick={handleDeleteCard} className="cursor-pointer">
+                    Delete
+                  </p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -167,8 +212,6 @@ const Card = ({ document }) => {
         </div>
       </div>
     </div>
-
-  
   );
 };
 

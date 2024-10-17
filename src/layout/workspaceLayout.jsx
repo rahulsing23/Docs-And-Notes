@@ -4,7 +4,7 @@ import { doc, getDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 
-const WorkSpaceLayout = ({ children }) => {
+const WorkSpaceLayout = () => {
   const { id } = useParams(); // Get dynamic route param (workspace ID)
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true); // State to track loading
@@ -36,7 +36,7 @@ const WorkSpaceLayout = ({ children }) => {
   }
 
   
-  return workspaceExists ? children : null;
+  return workspaceExists ? <Outlet/> : null;
 };
 
 export default WorkSpaceLayout;

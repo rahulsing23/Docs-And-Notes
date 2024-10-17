@@ -24,9 +24,7 @@ import {  ref, deleteObject } from "firebase/storage";
 
 
 const WorkspaceCard = ({ workspaceSnap }) => {
-  useEffect(() => {
-    // console.log(workspaceId)
-  }, []);
+
   const handleDeleteWorkspace = async () => {
     try {
       
@@ -59,7 +57,7 @@ const WorkspaceCard = ({ workspaceSnap }) => {
 
   return (
     <div className=" shadow-red-950 rounded-3xl w-[250px] border-blue-950 border-[1px]">
-      <Link to={`/workspace/${workspaceSnap.workspaceId}`}>
+      <Link to={`/workspace/${workspaceSnap.workspaceName}/${workspaceSnap.workspaceId}`}>
         <div className="relative group cursor-pointer">
           <div className="group-hover:opacity-40 cursor-pointer ">
             <img
@@ -73,7 +71,7 @@ const WorkspaceCard = ({ workspaceSnap }) => {
         </div>
       </Link>
       <div className="flex justify-between items-center  capitalize ">
-        <Link to={`/workspace/${workspaceSnap.workspaceId}`}>
+        <Link to={`/workspace/${workspaceSnap.workspaceName}/${workspaceSnap.workspaceId}`}>
           <div className="p-5 shadow-2xl hover:text-orange-600">
             <h2 className="font-medium text-2xl">{workspaceSnap.workspaceName}</h2>
             <h2 className="mt-2 text-sm">{workspaceSnap.tags}</h2>
@@ -87,12 +85,19 @@ const WorkspaceCard = ({ workspaceSnap }) => {
             <DropdownMenuContent className="w-56 bg-transparent bg-opacity-50 border-black bg-black text-white">
               <DropdownMenuLabel>Settings</DropdownMenuLabel>
               <DropdownMenuSeparator />
+
               <DropdownMenuRadioGroup value="bottom">
+
+                {/*Note open */}
                 <DropdownMenuRadioItem className="focus:text-green-600">
-                  Open
+                <Link to={`/workspace/${workspaceSnap.workspaceName}/${workspaceSnap.workspaceId}`}> Open </Link> 
                 </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem>Hide</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem>Secure</DropdownMenuRadioItem>
+
+                {/*Fixme: Secure */}
+                <DropdownMenuRadioItem><Link to={`/workspace/${workspaceSnap.workspaceName}/${workspaceSnap.workspaceId}/secure`}>Secure</Link></DropdownMenuRadioItem>
+
+                {/* Note Delete */}
+
                 <DropdownMenuRadioItem
                   className="focus:text-red-600"
                   onClick={handleDeleteWorkspace}
