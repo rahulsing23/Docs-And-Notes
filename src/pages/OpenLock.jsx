@@ -13,49 +13,46 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useNavigate, useParams } from 'react-router-dom';
-import { collection, doc, setDoc } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs, query, setDoc, where } from 'firebase/firestore';
 import { db } from '@/firebase/firebase';
 import uuid4 from 'uuid4';
 import { Loader2Icon } from 'lucide-react';
-const SecureWorkspace = () => {
+const OpenLock = () => {
   const { workspaceName } = useParams();
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
 
-  // FixMe:
-  const handleSecure = async () => {
+  const OpenLockHandler = async () =>{
     try {
-      if (password === '' || confirmPassword === '') {
-        setError('Fill all the Password fields');
-      } else {
-        if (password !== confirmPassword) {
-          setError('Password and Confirm password are not match');
-        }
-        if (password === confirmPassword) {
-          const secureId = uuid4();
-          setLoading(true)
-          
-          await setDoc(doc(db, 'secureworkspace', secureId.toString()), {
-            workspaceName: workspaceName,
-            workspaceId: id.toString(),
-            password: password
-          });
-          setLoading(false)
-          navigate('/');
-        }
-        
+      
+      setLoading(true)
+      const q =  query(collection(db, "secureworkspace"), where("password","==",password))
+      const querySnapshot = await getDocs(q);
+      if(querySnapshot.docs.length !== 0){
+
+        const Output = querySnapshot.docs
+          .filter((doc) => {
+            return doc.data().workspaceId == id.toString();
+          })
+          console.log(Output[0].id)
+  
+          await deleteDoc(doc(db, "secureworkspace", Output[0].id.toString()))
+          navigate("/")
+      }
+      else{
+        setError("Wrong Password")
       }
     } catch (error) {
-      console.log('Error in handle secure :: ', error.message);
+      console.log("Error in handleSecurityCheck function :: ", error.message);
+      setError(error.message);
     }
     finally{
-      setLoading(false)
+      setLoading(false);
     }
-  };
+  }
   return (
     <div className="flex items-center justify-center w-full h-screen">
       <div className="flex  w-[60%] h-[75%]  shadow-2xl">
@@ -91,14 +88,7 @@ const SecureWorkspace = () => {
                         onChange={(e) => setPassword(e.target.value)}
                       />
                     </div>
-                    <div className="flex flex-col space-y-3">
-                      <Label htmlFor="confirm-password">Confirm Password</Label>
-                      <Input
-                        id="confirm-password"
-                        type="password"
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                      />
-                    </div>
+                
                   </div>
                 </form>
               </CardContent>
@@ -108,9 +98,9 @@ const SecureWorkspace = () => {
                 </Button>
                 <Button
                   disabled={!workspaceName || loading}
-                  onClick={handleSecure}
+                  onClick={OpenLockHandler}
                 >
-                  Secure
+                  Remove Lock
                   {loading && <Loader2Icon className="animate-spin ml-2" />}
                 </Button>
               </CardFooter>
@@ -123,7 +113,7 @@ const SecureWorkspace = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SecureWorkspace;
+export default OpenLock

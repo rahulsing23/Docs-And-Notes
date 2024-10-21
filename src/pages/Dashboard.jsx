@@ -81,27 +81,26 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="bg-[#070f20] w-full h-screen flex ">
-      {/* Note Left Section */}
-      <div className="w-[20%] flex flex-col justify-between">
-        {/* NOTE LOGO */}
+    <div className="bg-[#070f20] w-full h-screen flex flex-col md:flex-row">
+      {/* Left Section */}
+      <div className="w-full md:w-[20%] flex flex-col justify-between">
+        {/* Logo */}
         <div className="p-5 ml-2 mt-2">
           <div className="w-[150px]">
-            {' '}
             <img src={LogoIcon} alt="" />
           </div>
         </div>
-
-        <div className="w-full h-[80px]  cursor-pointer border-t-2 border-black shadow-lg text-white flex gap-3 justify-start items-center p-5">
+  
+        <div className="w-full h-[80px] cursor-pointer border-t-2 border-black shadow-lg text-white flex gap-3 justify-start items-center p-5">
           <UserButton appearance={userButtonAppearance} />
-          <h1 className="text-xl">{user?.fullName}</h1>
+          <h1 className="text-lg md:text-xl">{user?.fullName}</h1>
         </div>
       </div>
-      {/* Note Right Section */}
-
-      <div className="w-full ">
-        <div className="relative min-h-screen overflow-hidden rounded-l-[50px]">
-          {/* Note Background Video */}
+  
+      {/* Right Section */}
+      <div className="w-full">
+        <div className="relative min-h-screen overflow-hidden rounded-none md:rounded-l-[50px]">
+          {/* Background Video */}
           <video
             className="absolute top-0 left-0 w-full h-full object-cover"
             autoPlay
@@ -110,64 +109,57 @@ export default function DashboardPage() {
           >
             <source src="./gif2.mp4" type="video/mp4" />
           </video>
-
+  
           {/* Overlay Container */}
-          <div className="absolute inset-0 flex justify-center bg-black bg-opacity-20 text-white">
-            {/* Note {SearchBar, Workspace} */}
-            <div className="w-[70%] flex  flex-col items-center">
-              {/* Note {SearchBar} */}
-              <div className="w-[600px] p-5 rounded-lg">
-                <Input ref={Inputref}
-                  className="bg-[#061129] bg-opacity-50 rounded-xl border-blue-950 focus:outline-none text-center text-white placeholder:text-white"
+          <div className="absolute inset-0 flex flex-col md:flex-row justify-center bg-black bg-opacity-20 text-white">
+            {/* SearchBar & Workspace */}
+            <div className="w-full md:w-[70%] flex flex-col items-center p-5">
+              {/* SearchBar */}
+              <div className="w-full md:w-[600px] p-5 rounded-lg">
+                <Input
+                  ref={Inputref}
+                  className="w-full bg-[#061129] bg-opacity-50 rounded-xl border-blue-950 focus:outline-none text-center text-white placeholder:text-white"
                   placeholder="Explore"
-                  onChange={(e)=>setInputquery(e.target.value)}
+                  onChange={(e) => setInputquery(e.target.value)}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter")
-                        handleSearchedQuery();
-                    }}                  
+                    if (e.key === "Enter") handleSearchedQuery();
+                  }}
                 />
               </div>
-              {/* Note Workspace */}
-              <div className=" w-full h-screen">
-                <ScrollArea className=" h-[650px] w-full rounded-md  p-4">
-                  <div className="flex gap-5 shadow-2xl flex-wrap-reverse justify-evenly ">
-                  {workspaceList.map((doc, index) => (
-                    <div className="flex  gap-5 " key={index}>
-                      
-                      <WorkspaceCard
-                        workspaceSnap={doc}
-                      />
-                    </div>
-                  ))}
+  
+              {/* Workspace */}
+              <div className="w-full h-full md:h-screen">
+                <ScrollArea className="h-[400px] md:h-[650px] w-full rounded-md p-4">
+                  <div className="flex flex-wrap-reverse gap-5 shadow-2xl justify-evenly">
+                    {workspaceList.map((doc, index) => (
+                      <div className="flex gap-5" key={index}>
+                        <WorkspaceCard workspaceSnap={doc} />
+                      </div>
+                    ))}
                   </div>
-                  
                 </ScrollArea>
               </div>
             </div>
-
-            {/* Note Card  & NewButton*/}
-            <div className="w-[30%] flex flex-col justify-start gap-10 p-5">
-              <div className=" w-[300px] h-[80px]  flex items-center justify-center gap-5 bg-black bg-opacity-50 rounded-3xl">
+  
+            {/* Right Card & New Button */}
+            <div className="w-full md:w-[30%] flex flex-col justify-start gap-10 p-5">
+              <div className="w-full md:w-[300px] h-[80px] flex items-center justify-center gap-5 bg-black bg-opacity-50 rounded-3xl">
                 <Link to="/createworkspace">
-                  <Button className=" bg-rose-600 rounded-2xl">
-                    +New WorkSpace
-                  </Button>
+                  <Button className="bg-rose-600 rounded-2xl">+New WorkSpace</Button>
                 </Link>
                 <SignOutButton>
-                  <Button variant="secondary" className="rounded-2xl w-[100px]">
-                    Signout
-                  </Button>
+                  <Button variant="secondary" className="rounded-2xl w-[100px]">Signout</Button>
                 </SignOutButton>
               </div>
-              <div className="w-full h-screen flex flex-col justify-evenly gap-10">
-                <div className="bg-black bg-opacity-50 w-full h-[200px]  p-5 flex flex-col gap-10">
-                  <h1 className="text-7xl text-white">{totalWorkspace}</h1>
-                  <p className="text-3xl text-rose-300 font-bold">
-                     WorkSpace Available
-                  </p>
+  
+              <div className="w-full h-full flex flex-col justify-evenly gap-10">
+                <div className="bg-black bg-opacity-50 w-full h-[150px] md:h-[200px] p-5 flex flex-col gap-5 md:gap-10">
+                  <h1 className="text-5xl md:text-7xl text-white">{totalWorkspace}</h1>
+                  <p className="text-xl md:text-2xl text-rose-300 font-bold">WorkSpace Available</p>
                 </div>
-                <div className="bg-black bg-opacity-50 w-full h-[300px] text-white  p-5 flex flex-col justify-center items-center ">
-                  <h1 className="text-3xl font-bold">Recently Visited</h1>
+  
+                <div className="bg-black bg-opacity-50 w-full h-[200px] md:h-[300px] text-white p-5 flex flex-col justify-center items-center">
+                  <h1 className="text-xl md:text-3xl font-bold">Recently Visited</h1>
                   <Tags />
                 </div>
               </div>
@@ -177,4 +169,5 @@ export default function DashboardPage() {
       </div>
     </div>
   );
+  
 }

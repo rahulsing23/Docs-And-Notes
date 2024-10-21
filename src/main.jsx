@@ -18,7 +18,8 @@ import CreateWorkspace from './pages/CreateWorkspace'
 import WorkspacePage from "./pages/WorkspacePage"
 import EditDocument from './pages/EditDocument'
 import SecureWorkspace from './pages/SecureWorkspace'
-
+import SecurityCheck from './pages/SecurityCheck'
+import OpenLock from './pages/OpenLock'
 
 const router = createBrowserRouter([
   {
@@ -38,7 +39,9 @@ const router = createBrowserRouter([
               { path: '', element: <WorkspacePage /> }, 
               { path: 'create-document', element: <CreateNewDocument /> }, 
               { path: ':docId/edit-document', element: <EditDocument /> },  
+              { path: 'security-check', element: <SecurityCheck /> },  
               { path: 'secure', element: <SecureWorkspace /> },  
+              { path: 'open-lock', element: <OpenLock /> },  
             ]
           },
         ]
