@@ -1,8 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
-import LogoIcon from '@/assets/icons/Logo5.jpg';
+import React from 'react';
+import LogoIcon from '@/assets/icons/Docs&Notes.png';
 import { UserButton, useUser } from '@clerk/clerk-react';
-import { Input } from './ui/input';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
 
@@ -22,7 +21,7 @@ const Navbar = () => {
   return (
     <div className="shadow-md flex justify-between items-center w-full h-[70px] p-5 bg-[#070f20]">
       <Link to="/">
-        <img src={LogoIcon} alt="Keep Notes" height={100} width={200} />
+        <img src={LogoIcon} alt="Keep Notes" height={80} width={150} />
       </Link>
 
     

@@ -84,8 +84,8 @@ const Foreground = () => {
     <div className="w-full h-screen p-5">
       <div className="w-full h-[80px]  flex justify-between items-center">
         <div className="flex items-center justify-center">
-        <h1 className="text-xl font-semibold capitalize text-orange-700 bg-green-300 p-2 rounded-l-lg border-none">workspace{' '}:</h1>
-        <h1 className="text-xl font-semibold capitalize text-green-700 bg-orange-300 p-2 rounded-r-lg border-none selection:text-cyan-400">{workspaceName}</h1>
+        <h1 className="text-xl font-semibold capitalize text-[#070f20] bg-white p-2 rounded-l-lg border-2">workspace{' '}:</h1>
+        <h1 className="text-xl font-semibold capitalize text-white bg-[#fe0039] p-2 rounded-r-lg border-none selection:text-cyan-400">{workspaceName}</h1>
 
         </div>
         <div className="w-[600px] p-5 rounded-lg">

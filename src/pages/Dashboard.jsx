@@ -3,9 +3,8 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { SignOutButton, UserButton, useUser } from '@clerk/clerk-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import LogoIcon from '@/assets/icons/Logo5.jpg';
+import LogoIcon from '@/assets/icons/Docs&Notes.png';
 import { useEffect, useRef, useState } from 'react';
-import Tags from '@/components/Tags';
 import { collection, getDocs, or, query, where } from 'firebase/firestore';
 import { db } from '@/firebase/firebase';
 import WorkspaceCard from '@/components/WorkspaceCard';
@@ -87,7 +86,7 @@ export default function DashboardPage() {
       <div className="w-full md:w-[20%] flex flex-col justify-between">
         {/* Logo */}
         <div className="p-5 ml-2 mt-2">
-          <div className="w-[150px]">
+          <div className="w-[180px]">
             <img src={LogoIcon} alt="" />
           </div>
         </div>
@@ -161,7 +160,7 @@ export default function DashboardPage() {
   
                 <div className="bg-black bg-opacity-50 w-full h-[200px] md:h-[300px] text-white p-5 flex flex-col justify-start gap-5 items-center">
                   <h1 className="text-xl md:text-3xl font-bold">Reminder</h1>
-                  <Textarea  className="bg-opacity-60 bg-black border-none resize-none w-full h-full" />
+                 
                 </div>
               </div>
             </div>
