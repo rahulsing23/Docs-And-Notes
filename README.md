@@ -18,7 +18,7 @@ Usage: In this project, Firebase Firestore is used to store and manage workspace
 Overview: React.js is a JavaScript library for building user interfaces, particularly single-page applications, using component-based architecture.
 Usage: React is used for building the interactive UI of the web application, allowing users to seamlessly interact with their workspaces, notes, and documents. React’s component structure allows for the efficient development of dynamic features, such as creating and managing workspaces and updating documents in real-time.
 
-4. **Shadcn (UI Component Library)**
+4.**Shadcn (UI Component Library)**
 Overview: Shadcn is a design system and UI component library built for React applications.
 Usage: Shadcn provides pre-built and customizable UI components, such as buttons, modals, and forms, that enhance the visual appeal and user experience of the web application. It ensures a cohesive and modern interface, allowing for the rapid development of user-friendly features.
 
