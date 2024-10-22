@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import WolfImage from '@/assets/Images/wolf.jpg';
-import { FaLock, FaLockOpen } from 'react-icons/fa';
+import { FaLock } from 'react-icons/fa';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -12,28 +12,36 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useNavigate, useParams } from 'react-router-dom';
-import { collection, doc, getDocs, query, setDoc, where } from 'firebase/firestore';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { collection, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import { db } from '@/firebase/firebase';
-import uuid4 from 'uuid4';
 import { Loader2Icon } from 'lucide-react';
+import Navbar from '@/components/Navbar';
 
 const SecurityCheck = () => {
-  const { workspaceName } = useParams();
+  // const { workspaceName } = useParams();
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { id } = useParams();
+  // const { id } = useParams();
+  const location  = useLocation();
+  const workspaceSnap = location.state;
 
   const handleCheckSecurity = async () =>{
     try {
       
       setLoading(true)
-      const q =  query(collection(db, "secureworkspace"), where("password","==",password))
+      const q =  query(collection(db, "secureworkspace"), where("password","==",password), where("workspaceId", '==', workspaceSnap.workspaceId.toString()))
       const qs = await getDocs(q);
+      // console.log(qs.docs[0].data())
       if(qs.docs.length !== 0){
-        navigate(`/workspace/${workspaceName}/${id}`)
+        await updateDoc(doc(db, "secureworkspace", qs.docs[0].id.toString()), {
+          isValidOpen: true
+        
+        })
+        // console.log(qs.docs)
+        navigate(`/workspace/${workspaceSnap.workspaceName}/${workspaceSnap.workspaceId}`)
       }
       else{
         setError("Wrong Password")
@@ -47,7 +55,8 @@ const SecurityCheck = () => {
     }
   }
   return (
-    <div className="flex items-center justify-center w-full h-screen">
+    <div className="flex flex-col items-center justify-start gap-[50px] w-full h-screen">
+      <Navbar/>
       <div className="flex  w-[60%] h-[75%]  shadow-2xl">
         <div className="w-[50%] h-full border-r-2 flex flex-col items-center">
           <div className="w-full h-full flex p-5 ">
@@ -69,7 +78,7 @@ const SecurityCheck = () => {
                         id="name"
                         placeholder="Name of your project"
                         className="capitalize"
-                        value={workspaceName}
+                        value={workspaceSnap.workspaceName}
                         disabled
                       />
                     </div>
@@ -90,7 +99,7 @@ const SecurityCheck = () => {
                   Cancel
                 </Button>
                 <Button
-                  disabled={!workspaceName || loading}
+                  disabled={!workspaceSnap.workspaceName || loading}
                   onClick={handleCheckSecurity}
                 >
                   Open Workspace

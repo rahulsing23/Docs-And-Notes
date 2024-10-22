@@ -32,6 +32,9 @@ const router = createBrowserRouter([
         children: [
           { path: '/', element: <DashboardPage /> },
           { path: '/createworkspace', element: <CreateWorkspace /> },
+          { path: '/workspace/security-check', element: <SecurityCheck /> },  
+          { path: '/workspace/secure', element: <SecureWorkspace /> },  
+          { path: '/workspace/open-lock', element: <OpenLock /> }, 
           {
             path: '/workspace/:workspaceName/:id',
             element: <WorkSpaceLayout />, 
@@ -39,9 +42,7 @@ const router = createBrowserRouter([
               { path: '', element: <WorkspacePage /> }, 
               { path: 'create-document', element: <CreateNewDocument /> }, 
               { path: ':docId/edit-document', element: <EditDocument /> },  
-              { path: 'security-check', element: <SecurityCheck /> },  
-              { path: 'secure', element: <SecureWorkspace /> },  
-              { path: 'open-lock', element: <OpenLock /> },  
+               
             ]
           },
         ]

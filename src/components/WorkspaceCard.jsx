@@ -85,7 +85,7 @@ const WorkspaceCard = ({ workspaceSnap }) => {
           item.workspaceId.toString() === workspaceSnap.workspaceId.toString()
       );
       setIsWorkspaceSecure(res);
-      console.log('Workspace Secure Status:', res);
+      // console.log('Workspace Secure Status:', res);
     }
   }, [secureWorkspaceList, workspaceSnap]);
 
@@ -94,35 +94,34 @@ const WorkspaceCard = ({ workspaceSnap }) => {
   }, []);
 
   return isWorkspaceSecure ? (
-    <div className=" shadow-red-950 rounded-3xl w-[250px] border-blue-950 border-[1px]">
+    <div className=" shadow-red-950 rounded-3xl w-[250px] border-blue-950 border-[1px] ">
       <div
         className="relative group cursor-pointer"
         style={{
           // pointerEvents: isWorkspaceSecure ? 'none' : 'auto',
           opacity: isWorkspaceSecure ? 0.5 : 1,
         }}
+        onClick={()=>navigate("/workspace/security-check", {state: workspaceSnap})}
       >
-        <Link to={`/workspace/${workspaceSnap.workspaceName}/${workspaceSnap.workspaceId}/open-lock`}>
         
           <h2 className="hidden absolute p-4 w-full h-full  items-center justify-center group-hover:flex">
             <LockKeyholeIcon/>
           </h2>
 
        
-          <div className="group-hover:opacity-40 cursor-pointer ">
+          <div className="group-hover:opacity-40 cursor-pointer h-full">
             <img
               src={workspaceSnap.coverImage}
               alt="Cover Image"
               width={400}
               height={400}
-              className="w-full h-[150px] object-cover rounded-t-3xl"
+              className="w-full h-full object-cover rounded-t-3xl"
               />
           </div>
     
-      </Link>
       </div>
-  
-        <div className="flex  justify-center w-full">
+        
+        <div className="flex  justify-center w-full  mt-[20px]  flex-col gap-5 items-center">
           <Button
             style={{
               pointerEvents: !isWorkspaceSecure ? 'none' : 'auto',
@@ -130,12 +129,26 @@ const WorkspaceCard = ({ workspaceSnap }) => {
             }}
             onClick={() =>
               navigate(
-                `/workspace/${workspaceSnap.workspaceName}/${workspaceSnap.workspaceId}/security-check`
+                `/workspace/security-check`, {state:workspaceSnap}
               )
             }
-            className="w-full rounded-b-3xl"
+            className="w-[150px] bg-blue-400 text-white hover:bg-red-500 hover:text-white "
           >
-            Open
+            Open Workspace
+          </Button>
+          <Button
+            style={{
+              pointerEvents: !isWorkspaceSecure ? 'none' : 'auto',
+              opacity: !isWorkspaceSecure ? 0.5 : 1,
+            }}
+            onClick={() =>
+              navigate(
+                `/workspace/open-lock`, {state:workspaceSnap}
+              )
+            }
+            className="w-[150px] bg-white text-black hover:bg-red-500 hover:text-white"
+          >
+            Remove Lock
           </Button>
         </div>
     </div>
@@ -193,7 +206,7 @@ const WorkspaceCard = ({ workspaceSnap }) => {
                   <DropdownMenuRadioItem
                     onClick={() =>
                       navigate(
-                        `/workspace/${workspaceSnap.workspaceName}/${workspaceSnap.workspaceId}/secure`
+                        `/workspace/secure`, {state: workspaceSnap}
                       )
                     }
                   >

@@ -40,7 +40,7 @@ function CreateWorkspace() {
       })
 
       setLoading(false) 
-      navigate("/workspace/"+workspaceId)
+      navigate(`/workspace/${workspaceName}/`+workspaceId)
     } catch (error) {
       setError(error.message)
       setLoading(false)

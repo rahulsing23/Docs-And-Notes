@@ -9,6 +9,7 @@ import Tags from '@/components/Tags';
 import { collection, getDocs, or, query, where } from 'firebase/firestore';
 import { db } from '@/firebase/firebase';
 import WorkspaceCard from '@/components/WorkspaceCard';
+import { Textarea } from '@/components/ui/textarea';
 
 export default function DashboardPage() {
   const { user } = useUser();
@@ -49,7 +50,7 @@ export default function DashboardPage() {
       }
     )) 
     setWorkspaceList(Output) 
-    console.log(Output)
+    // console.log(Output)
   }
 
 
@@ -129,7 +130,7 @@ export default function DashboardPage() {
   
               {/* Workspace */}
               <div className="w-full h-full md:h-screen">
-                <ScrollArea className="h-[400px] md:h-[650px] w-full rounded-md p-4">
+                <ScrollArea className="h-[400px] md:h-[600px] w-full rounded-md p-4">
                   <div className="flex flex-wrap-reverse gap-5 shadow-2xl justify-evenly">
                     {workspaceList.map((doc, index) => (
                       <div className="flex gap-5" key={index}>
@@ -158,9 +159,9 @@ export default function DashboardPage() {
                   <p className="text-xl md:text-2xl text-rose-300 font-bold">WorkSpace Available</p>
                 </div>
   
-                <div className="bg-black bg-opacity-50 w-full h-[200px] md:h-[300px] text-white p-5 flex flex-col justify-center items-center">
-                  <h1 className="text-xl md:text-3xl font-bold">Recently Visited</h1>
-                  <Tags />
+                <div className="bg-black bg-opacity-50 w-full h-[200px] md:h-[300px] text-white p-5 flex flex-col justify-start gap-5 items-center">
+                  <h1 className="text-xl md:text-3xl font-bold">Reminder</h1>
+                  <Textarea  className="bg-opacity-60 bg-black border-none resize-none w-full h-full" />
                 </div>
               </div>
             </div>

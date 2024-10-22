@@ -12,18 +12,21 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { collection, deleteDoc, doc, getDocs, query, setDoc, where } from 'firebase/firestore';
 import { db } from '@/firebase/firebase';
 import uuid4 from 'uuid4';
 import { Loader2Icon } from 'lucide-react';
+import Navbar from '@/components/Navbar';
 const OpenLock = () => {
-  const { workspaceName } = useParams();
+  // const { workspaceName } = useParams();
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { id } = useParams();
+  // const { id } = useParams();
+  const location  = useLocation();
+  const workspaceSnap = location.state;
 
   const OpenLockHandler = async () =>{
     try {
@@ -35,9 +38,9 @@ const OpenLock = () => {
 
         const Output = querySnapshot.docs
           .filter((doc) => {
-            return doc.data().workspaceId == id.toString();
+            return doc.data().workspaceId == workspaceSnap.workspaceId.toString();
           })
-          console.log(Output[0].id)
+          // console.log(Output[0].id)
   
           await deleteDoc(doc(db, "secureworkspace", Output[0].id.toString()))
           navigate("/")
@@ -54,7 +57,8 @@ const OpenLock = () => {
     }
   }
   return (
-    <div className="flex items-center justify-center w-full h-screen">
+    <div className="flex flex-col gap-[50px] items-center justify-start w-full h-screen">
+      <Navbar/>
       <div className="flex  w-[60%] h-[75%]  shadow-2xl">
         <div className="w-[50%] h-full border-r-2 flex flex-col items-center">
           <div className="w-full h-full flex p-5 ">
@@ -76,7 +80,7 @@ const OpenLock = () => {
                         id="name"
                         placeholder="Name of your project"
                         className="capitalize"
-                        value={workspaceName}
+                        value={workspaceSnap.workspaceName}
                         disabled
                       />
                     </div>
@@ -97,7 +101,7 @@ const OpenLock = () => {
                   Cancel
                 </Button>
                 <Button
-                  disabled={!workspaceName || loading}
+                  disabled={!workspaceSnap.workspaceName || loading}
                   onClick={OpenLockHandler}
                 >
                   Remove Lock
