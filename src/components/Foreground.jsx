@@ -99,7 +99,7 @@ const Foreground = () => {
             }}
           />
         </div>
-        <Link to={`/workspace/${id}/create-document`}>
+        <Link to={`/workspace/${workspaceName}/${id}/create-document`}>
           <Button className="bg-rose-600 rounded-lg h-[50px] w-[150px]">
             +New Notes
           </Button>

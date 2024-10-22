@@ -2,7 +2,7 @@ import { Input } from '@/components/ui/input';
 import { UserButton, useUser } from '@clerk/clerk-react';
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import LogoIcon from '@/assets/icons/Logo5.jpg';
+import LogoIcon from '@/assets/icons/Docs&Notes.png';
 import { FaArrowCircleRight } from 'react-icons/fa';
 import { Textarea } from '@/components/ui/textarea';
 import 'firebase/compat/storage';
@@ -130,11 +130,11 @@ const CreateNewDocument = () => {
         {/* Note Form */}
         <div className="flex flex-col justify-center items-center w-full h-screen">
           <div className="flex center items-center justify-center border-2 w-[90%] h-[70%] md:w-[70%] lg:w-[60%] shadow-2xl rounded-lg">
-            <section className="bg-gray-100 w-full">
+            <section className="bg-[#070f20] w-full">
               <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 gap-x-16 gap-y-8 lg:grid-cols-5">
                   <div className="lg:col-span-2 lg:py-12 flex flex-col gap-5 items-center">
-                    <div className="flex justify-start w-full">
+                    <div className="flex justify-start w-full bg-[#070f20]">
                       <img
                         src={LogoIcon}
                         alt="Keep Notes"
@@ -142,11 +142,11 @@ const CreateNewDocument = () => {
                         width={200}
                       />
                     </div>
-                    <p className="max-w-xl text-lg text-[#070f20] ">
+                    <p className="max-w-xl text-lg text-white ">
                       {paragraph}
                     </p>
                     <div className="flex justify-start w-full">
-                      <FaArrowCircleRight className="text-5xl" />
+                      <FaArrowCircleRight className="text-5xl text-white" />
                     </div>
                   </div>
 

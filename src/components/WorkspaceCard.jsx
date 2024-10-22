@@ -109,7 +109,7 @@ const WorkspaceCard = ({ workspaceSnap }) => {
           </h2>
 
        
-          <div className="group-hover:opacity-40 cursor-pointer h-full">
+          <div className="group-hover:opacity-40 cursor-pointer h-[150px]">
             <img
               src={workspaceSnap.coverImage}
               alt="Cover Image"
@@ -158,7 +158,7 @@ const WorkspaceCard = ({ workspaceSnap }) => {
         <Link
           to={`/workspace/${workspaceSnap.workspaceName}/${workspaceSnap.workspaceId}`}
         >
-          <div className="group-hover:opacity-40 cursor-pointer ">
+          <div className="group-hover:opacity-40 cursor-pointer h-[150px]">
             <img
               src={workspaceSnap.coverImage}
               alt="Cover Image"
@@ -169,18 +169,18 @@ const WorkspaceCard = ({ workspaceSnap }) => {
           </div>
         </Link>
       </div>
-        <div className="flex justify-between items-center  capitalize ">
+        <div className="flex justify-between items-center capitalize">
           <Link
             to={`/workspace/${workspaceSnap.workspaceName}/${workspaceSnap.workspaceId}`}
           >
-            <div className="p-5 shadow-2xl hover:text-orange-600">
+            <div className="p-5 shadow-2xl hover:text-orange-600 w-[200px]">
               <h2 className="font-medium text-2xl">
                 {workspaceSnap.workspaceName}
               </h2>
               <h2 className="mt-2 text-sm">{workspaceSnap.tags}</h2>
             </div>
           </Link>
-          <div className="mt-8 flex items-center gap-2 pr-4">
+          <div className="mt-8 flex items-center gap-2 pr-4 ">
             <DropdownMenu className="">
               <DropdownMenuTrigger>
                 <SlOptionsVertical />
