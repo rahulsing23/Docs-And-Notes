@@ -91,6 +91,7 @@ Throughout this project, I honed my skills as a professional developer by master
 
 ### SignUp
 ![image](https://github.com/user-attachments/assets/e2d14732-c49f-45e1-b38f-6c84b9d6c466)
+
 ### SignIn
 ![image](https://github.com/user-attachments/assets/3e5f6d00-58b9-4c3d-b576-1795c235cfed)
 
@@ -98,7 +99,7 @@ Throughout this project, I honed my skills as a professional developer by master
 ![image](https://github.com/user-attachments/assets/ce39ef5e-685b-4281-aae4-8d1807f7998f)
 
 ### Workspace:
-![image](https://github.com/user-attachments/assets/be3a74fd-c58c-4fb5-8587-85bc7b4c0770)
+![image](https://github.com/user-attachments/assets/aaece706-023e-4d02-8834-c26d80d17de0)
 
 ### Create-Workspace Page:
 ![image](https://github.com/user-attachments/assets/b5d2a835-5a53-4f22-8f45-5ad0470d4ded)
