@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import WolfImage from '@/assets/Images/wolf.jpg';
-import { FaLock, FaLockOpen } from 'react-icons/fa';
+import { FaLock } from 'react-icons/fa';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -12,19 +12,16 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { collection, deleteDoc, doc, getDocs, query, setDoc, where } from 'firebase/firestore';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { collection, deleteDoc, doc, getDocs, query, where } from 'firebase/firestore';
 import { db } from '@/firebase/firebase';
-import uuid4 from 'uuid4';
 import { Loader2Icon } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 const OpenLock = () => {
-  // const { workspaceName } = useParams();
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  // const { id } = useParams();
   const location  = useLocation();
   const workspaceSnap = location.state;
 
@@ -40,7 +37,7 @@ const OpenLock = () => {
           .filter((doc) => {
             return doc.data().workspaceId == workspaceSnap.workspaceId.toString();
           })
-          // console.log(Output[0].id)
+      
   
           await deleteDoc(doc(db, "secureworkspace", Output[0].id.toString()))
           navigate("/")

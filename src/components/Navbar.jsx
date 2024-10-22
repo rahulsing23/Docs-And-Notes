@@ -5,9 +5,6 @@ import { Link } from 'react-router-dom';
 
 const Navbar = () => {
 
- 
-
-
   const userButtonAppearance = {
     elements: {
       userButtonAvatarBox: 'w-10 h-10',

@@ -29,7 +29,6 @@ const SecureWorkspace = () => {
   const location = useLocation()
   const workspaceSnap = location.state; 
 
-  // FixMe: 
   const handleSecure = async () => {
     try {
       if (password === '' || confirmPassword === '') {

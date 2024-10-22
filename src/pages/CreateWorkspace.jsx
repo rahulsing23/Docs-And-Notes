@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import CoverPicker from './CoverPicker';
 import { db } from '@/firebase/firebase'
 import { doc, setDoc } from 'firebase/firestore';
-import { useAuth, useUser } from '@clerk/clerk-react';
+import {  useUser } from '@clerk/clerk-react';
 import { Link, useNavigate } from 'react-router-dom';
 import WorkspaceTags from "@/components/WorkspaceTags"
 import {

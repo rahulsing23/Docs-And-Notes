@@ -19,12 +19,11 @@ import { Loader2Icon } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 
 const SecurityCheck = () => {
-  // const { workspaceName } = useParams();
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  // const { id } = useParams();
+
   const location  = useLocation();
   const workspaceSnap = location.state;
 
@@ -34,13 +33,13 @@ const SecurityCheck = () => {
       setLoading(true)
       const q =  query(collection(db, "secureworkspace"), where("password","==",password), where("workspaceId", '==', workspaceSnap.workspaceId.toString()))
       const qs = await getDocs(q);
-      // console.log(qs.docs[0].data())
+     
       if(qs.docs.length !== 0){
         await updateDoc(doc(db, "secureworkspace", qs.docs[0].id.toString()), {
           isValidOpen: true
         
         })
-        // console.log(qs.docs)
+        
         navigate(`/workspace/${workspaceSnap.workspaceName}/${workspaceSnap.workspaceId}`)
       }
       else{

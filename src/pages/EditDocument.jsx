@@ -9,8 +9,8 @@ import 'firebase/compat/storage';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../firebase/firebase';
 import { Button } from '@/components/ui/button';
-import { collection, doc, getDoc, getDocs, query, setDoc, updateDoc } from 'firebase/firestore';
-import uuid4 from 'uuid4';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+
 
 const paragraph =
   'Effective note-making is a crucial skill for enhancing learning and retention. By summarizing key points, using bullet lists, and incorporating visuals, individuals can create organized and engaging notes. Regular review and personalization of note-taking methods cater to unique learning styles, fostering deeper understanding and improving overall academic performance.';

@@ -51,7 +51,6 @@ export default function DashboardPage() {
       ...doc.data(),
     }));
     setWorkspaceList(Output);
-    // console.log(Output)
   };
 
   useEffect(() => {
