@@ -121,7 +121,7 @@ const WorkspaceCard = ({ workspaceSnap }) => {
     
       </div>
         
-        <div className="flex  justify-center w-full  mt-[20px]  flex-col gap-5 items-center">
+        <div className="flex  justify-center w-full  mt-[20px]  flex-col gap-5 items-center mb-2">
           <Button
             style={{
               pointerEvents: !isWorkspaceSecure ? 'none' : 'auto',
