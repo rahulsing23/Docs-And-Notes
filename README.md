@@ -8,7 +8,6 @@ I developed a web application using Clerk for authentication, Firebase for data 
 
 1. **Clerk (Authentication & User Management)**
 Overview: Clerk provides a complete user management system, handling authentication, user profiles, and session management.
-
 Usage: Clerk is used to securely handle user login, registration, and session persistence across the application. It simplifies integration with social login providers and ensures that only authenticated users can access the workspaces and notes.
 
 3. **Firebase (Backend & Database)**
