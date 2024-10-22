@@ -21,6 +21,7 @@ import SecureWorkspace from './pages/SecureWorkspace'
 import SecurityCheck from './pages/SecurityCheck'
 import OpenLock from './pages/OpenLock'
 
+
 const router = createBrowserRouter([
   {
     element: <RootLayout />,
@@ -30,7 +31,7 @@ const router = createBrowserRouter([
       {
         element: <DashboardLayout />,
         children: [
-          { path: '/', element: <DashboardPage /> },
+          { path: '/', element:<DashboardPage /> },
           { path: '/createworkspace', element: <CreateWorkspace /> },
           { path: '/workspace/security-check', element: <SecurityCheck /> },  
           { path: '/workspace/secure', element: <SecureWorkspace /> },  

@@ -8,60 +8,60 @@ import { useEffect, useRef, useState } from 'react';
 import { collection, getDocs, or, query, where } from 'firebase/firestore';
 import { db } from '@/firebase/firebase';
 import WorkspaceCard from '@/components/WorkspaceCard';
-import { Textarea } from '@/components/ui/textarea';
+
 
 export default function DashboardPage() {
   const { user } = useUser();
-  const [workspaceList, setWorkspaceList] = useState([]); 
+  const [workspaceList, setWorkspaceList] = useState([]);
   const [totalWorkspace, setTotalWorkspace] = useState(0);
-  const [inputquery, setInputquery] = useState("");
+  const [inputquery, setInputquery] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
-  const Inputref = useRef()
+  const [totalDocument, setTotalDocument] = useState(0);
+  const Inputref = useRef();
+
 
   const countDocumentsInCollection = async (collectionName) => {
     try {
       const querySnapshot = await getDocs(collection(db, collectionName));
-
+      const docSnapShot = await getDocs(collection(db, "workspaceDocument"))
       const workspaceData = querySnapshot.docs.map((doc, index) => ({
         id: doc.id,
         ...doc.data(),
       }));
 
       setWorkspaceList(workspaceData);
-      setTotalWorkspace(querySnapshot.size); 
+      setTotalWorkspace(querySnapshot.size);
+      setTotalDocument(docSnapShot.size)
     } catch (error) {
       console.error('Error counting documents: ', error);
     }
   };
 
-  const handleSearchedQuery = async () =>{
-    
-    const q = query(collection(db, "workspace"),
-      or(where('tags', '==', inputquery.toLowerCase()),
-         where('workspaceName', '==', inputquery.toLowerCase())
+  const handleSearchedQuery = async () => {
+    const q = query(
+      collection(db, 'workspace'),
+      or(
+        where('tags', '==', inputquery.toLowerCase()),
+        where('workspaceName', '==', inputquery.toLowerCase())
       )
     );
     const querySnapshot = await getDocs(q);
-    const Output = querySnapshot.docs.map((doc, index)=>(
-      {
-        id: doc.id,
-        ...doc.data(),
-      }
-    )) 
-    setWorkspaceList(Output) 
+    const Output = querySnapshot.docs.map((doc, index) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setWorkspaceList(Output);
     // console.log(Output)
-  }
-
+  };
 
   useEffect(() => {
-    
     const handleTyping = (event) => {
       if (Inputref.current) {
         Inputref.current.focus();
         setSearchQuery((prevQuery) => prevQuery + event.key);
       }
     };
-    
+
     !inputquery && countDocumentsInCollection('workspace');
 
     document.addEventListener('keydown', handleTyping);
@@ -70,7 +70,6 @@ export default function DashboardPage() {
       document.removeEventListener('keydown', handleTyping);
     };
   }, [searchQuery]);
- 
 
   const userButtonAppearance = {
     elements: {
@@ -90,13 +89,13 @@ export default function DashboardPage() {
             <img src={LogoIcon} alt="" />
           </div>
         </div>
-  
+
         <div className="w-full h-[80px] cursor-pointer border-t-2 border-black shadow-lg text-white flex gap-3 justify-start items-center p-5">
           <UserButton appearance={userButtonAppearance} />
           <h1 className="text-lg md:text-xl">{user?.fullName}</h1>
         </div>
       </div>
-  
+
       {/* Right Section */}
       <div className="w-full">
         <div className="relative min-h-screen overflow-hidden rounded-none md:rounded-l-[50px]">
@@ -109,7 +108,7 @@ export default function DashboardPage() {
           >
             <source src="./gif2.mp4" type="video/mp4" />
           </video>
-  
+
           {/* Overlay Container */}
           <div className="absolute inset-0 flex flex-col md:flex-row justify-center bg-black bg-opacity-20 text-white">
             {/* SearchBar & Workspace */}
@@ -122,11 +121,11 @@ export default function DashboardPage() {
                   placeholder="Explore"
                   onChange={(e) => setInputquery(e.target.value)}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter") handleSearchedQuery();
+                    if (e.key === 'Enter') handleSearchedQuery();
                   }}
                 />
               </div>
-  
+
               {/* Workspace */}
               <div className="w-full h-full md:h-screen">
                 <ScrollArea className="h-[400px] md:h-[600px] w-full rounded-md p-4">
@@ -140,27 +139,39 @@ export default function DashboardPage() {
                 </ScrollArea>
               </div>
             </div>
-  
+
             {/* Right Card & New Button */}
             <div className="w-full md:w-[30%] flex flex-col justify-start gap-10 p-5">
               <div className="w-full md:w-[300px] h-[80px] flex items-center justify-center gap-5 bg-black bg-opacity-50 rounded-3xl">
                 <Link to="/createworkspace">
-                  <Button className="bg-rose-600 rounded-2xl">+New WorkSpace</Button>
+                  <Button className="bg-rose-600 rounded-2xl">
+                    +New WorkSpace
+                  </Button>
                 </Link>
                 <SignOutButton>
-                  <Button variant="secondary" className="rounded-2xl w-[100px]">Signout</Button>
+                  <Button variant="secondary" className="rounded-2xl w-[100px]">
+                    Signout
+                  </Button>
                 </SignOutButton>
               </div>
-  
+
               <div className="w-full h-full flex flex-col justify-evenly gap-10">
                 <div className="bg-black bg-opacity-50 w-full h-[150px] md:h-[200px] p-5 flex flex-col gap-5 md:gap-10">
-                  <h1 className="text-5xl md:text-7xl text-white">{totalWorkspace}</h1>
-                  <p className="text-xl md:text-2xl text-rose-300 font-bold">WorkSpace Available</p>
+                  <h1 className="text-5xl md:text-7xl text-white">
+                    {totalWorkspace}
+                  </h1>
+                  <p className="text-xl md:text-2xl text-rose-300 font-bold">
+                    WorkSpace Available
+                  </p>
                 </div>
-  
-                <div className="bg-black bg-opacity-50 w-full h-[200px] md:h-[300px] text-white p-5 flex flex-col justify-start gap-5 items-center">
-                  <h1 className="text-xl md:text-3xl font-bold">Reminder</h1>
-                 
+
+                <div className="bg-black bg-opacity-50 w-full h-[150px] md:h-[200px] p-5 flex flex-col gap-5 md:gap-10">
+                  <h1 className="text-5xl md:text-7xl text-white">
+                    {totalDocument}
+                  </h1>
+                  <p className="text-xl md:text-2xl text-rose-300 font-bold">
+                    WorkSpace Document
+                  </p>
                 </div>
               </div>
             </div>
@@ -169,5 +180,4 @@ export default function DashboardPage() {
       </div>
     </div>
   );
-  
 }
