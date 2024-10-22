@@ -18,6 +18,7 @@ const paragraph =
 const CreateNewDocument = () => {
   const { user } = useUser();
   const { id } = useParams();
+  const {workspaceName} = useParams()
   const [fileUrl, setFileUrl] = useState("");
   const [title, settitle] = useState('');
   const [description, setDescription] = useState();
@@ -104,7 +105,7 @@ const CreateNewDocument = () => {
       });
   
       setLoading(false);
-      navigate('/workspace/' + id); 
+      navigate(`/workspace/${workspaceName}/` + id); 
     } catch (error) {
       setLoading(false);
       console.error('Error In Create New Document Page :: ', error);

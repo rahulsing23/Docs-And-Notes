@@ -160,14 +160,14 @@ const Card = ({ document }) => {
               <Tooltip>
                 <TooltipTrigger>
                   <Link
-                    to={`/workspace/${id}/${document.documentId}/edit-document`}
+                    to={`/workspace/${document.workspaceName}/${id}/${document.documentId}/edit-document`}
                   >
                     <FaEdit />
                   </Link>
                 </TooltipTrigger>
                 <TooltipContent>
                   <Link
-                    to={`/workspace/${id}/${document.documentId}/edit-document`}
+                    to={`/workspace/${document.workspaceName}/${id}/${document.documentId}/edit-document`}
                   >
                     <p>Edit</p>
                   </Link>
