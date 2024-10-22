@@ -30,6 +30,7 @@ const Card = ({ document }) => {
   const [bodyColor, setBodyColor] = useState();
   const { user } = useUser();
   const { id } = useParams();
+  const {workspaceName} = useParams()
 
   useEffect(() => {
     function getRandomColorPair() {
@@ -160,14 +161,14 @@ const Card = ({ document }) => {
               <Tooltip>
                 <TooltipTrigger>
                   <Link
-                    to={`/workspace/${document.workspaceName}/${id}/${document.documentId}/edit-document`}
+                    to={`/workspace/${workspaceName}/${id}/${document.documentId}/edit-document`}
                   >
                     <FaEdit />
                   </Link>
                 </TooltipTrigger>
                 <TooltipContent>
                   <Link
-                    to={`/workspace/${document.workspaceName}/${id}/${document.documentId}/edit-document`}
+                    to={`/workspace/${workspaceName}/${id}/${document.documentId}/edit-document`}
                   >
                     <p>Edit</p>
                   </Link>
