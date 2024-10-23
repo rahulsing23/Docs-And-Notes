@@ -140,7 +140,7 @@ const EditDocument = () => {
       </div>
 
       {/* Content Below Navbar */}
-      <div className="mt-[70px]">
+      <div className="mt-[300px] xl:mt-[100px] lg:mt-[220px] md:mt-[200px]">
         {/* Note Form */}
         <div className="flex flex-col justify-center items-center w-full h-screen">
           <div className="flex center items-center justify-center border-2 w-[90%] h-[70%] md:w-[70%] lg:w-[60%] shadow-2xl rounded-lg">

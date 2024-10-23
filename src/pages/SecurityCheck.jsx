@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { collection, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import { db } from '@/firebase/firebase';
 import { Loader2Icon } from 'lucide-react';
@@ -24,42 +24,39 @@ const SecurityCheck = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const location  = useLocation();
+  const location = useLocation();
   const workspaceSnap = location.state;
 
-  const handleCheckSecurity = async () =>{
+  const handleCheckSecurity = async () => {
     try {
-      
-      setLoading(true)
-      const q =  query(collection(db, "secureworkspace"), where("password","==",password), where("workspaceId", '==', workspaceSnap.workspaceId.toString()))
+      setLoading(true);
+      const q = query(collection(db, "secureworkspace"), where("password", "==", password), where("workspaceId", '==', workspaceSnap.workspaceId.toString()));
       const qs = await getDocs(q);
-     
-      if(qs.docs.length !== 0){
+
+      if (qs.docs.length !== 0) {
         await updateDoc(doc(db, "secureworkspace", qs.docs[0].id.toString()), {
           isValidOpen: true
-        
-        })
-        
-        navigate(`/workspace/${workspaceSnap.workspaceName}/${workspaceSnap.workspaceId}`)
-      }
-      else{
-        setError("Wrong Password")
+        });
+
+        navigate(`/workspace/${workspaceSnap.workspaceName}/${workspaceSnap.workspaceId}`);
+      } else {
+        setError("Wrong Password");
       }
     } catch (error) {
       console.log("Error in handleSecurityCheck function :: ", error.message);
       setError(error.message);
-    }
-    finally{
+    } finally {
       setLoading(false);
     }
-  }
+  };
+
   return (
-    <div className="flex flex-col items-center justify-start gap-[50px] w-full h-screen">
-      <Navbar/>
-      <div className="flex  w-[60%] h-[75%]  shadow-2xl">
-        <div className="w-[50%] h-full border-r-2 flex flex-col items-center">
-          <div className="w-full h-full flex p-5 ">
-            <Card className="w-full h-full flex flex-col py-[40px]">
+    <div className="flex flex-col items-center justify-start gap-12 w-full min-h-screen p-4">
+      <Navbar />
+      <div className="flex flex-col lg:flex-row w-full max-w-6xl h-full shadow-2xl">
+        <div className="w-full lg:w-1/2 h-full border-r-2 flex flex-col items-center">
+          <div className="w-full h-full flex p-5">
+            <Card className="w-full h-full flex flex-col py-10">
               <CardHeader>
                 <CardTitle className="flex items-center gap-5">
                   <FaLock /> Workspace Lock
@@ -89,7 +86,6 @@ const SecurityCheck = () => {
                         onChange={(e) => setPassword(e.target.value)}
                       />
                     </div>
-                
                   </div>
                 </form>
               </CardContent>
@@ -109,12 +105,12 @@ const SecurityCheck = () => {
             </Card>
           </div>
         </div>
-        <div className="w-[50%] h-full">
-          <img src={WolfImage} alt="Side Image" className="w-full h-full" />
+        <div className="w-full lg:w-1/2 h-full flex items-center justify-center">
+          <img src={WolfImage} alt="Side Image" className="object-cover w-full h-full rounded-lg" />
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default SecurityCheck
+export default SecurityCheck;

@@ -17,49 +17,46 @@ import { collection, deleteDoc, doc, getDocs, query, where } from 'firebase/fire
 import { db } from '@/firebase/firebase';
 import { Loader2Icon } from 'lucide-react';
 import Navbar from '@/components/Navbar';
+
 const OpenLock = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const location  = useLocation();
+  const location = useLocation();
   const workspaceSnap = location.state;
 
-  const OpenLockHandler = async () =>{
+  const OpenLockHandler = async () => {
     try {
-      
-      setLoading(true)
-      const q =  query(collection(db, "secureworkspace"), where("password","==",password))
+      setLoading(true);
+      const q = query(collection(db, "secureworkspace"), where("password", "==", password));
       const querySnapshot = await getDocs(q);
-      if(querySnapshot.docs.length !== 0){
-
-        const Output = querySnapshot.docs
-          .filter((doc) => {
-            return doc.data().workspaceId == workspaceSnap.workspaceId.toString();
-          })
       
-  
-          await deleteDoc(doc(db, "secureworkspace", Output[0].id.toString()))
-          navigate("/")
-      }
-      else{
-        setError("Wrong Password")
+      if (querySnapshot.docs.length !== 0) {
+        const Output = querySnapshot.docs.filter((doc) => {
+          return doc.data().workspaceId === workspaceSnap.workspaceId.toString();
+        });
+
+        await deleteDoc(doc(db, "secureworkspace", Output[0].id.toString()));
+        navigate("/");
+      } else {
+        setError("Wrong Password");
       }
     } catch (error) {
       console.log("Error in handleSecurityCheck function :: ", error.message);
       setError(error.message);
-    }
-    finally{
+    } finally {
       setLoading(false);
     }
-  }
+  };
+
   return (
-    <div className="flex flex-col gap-[50px] items-center justify-start w-full h-screen">
-      <Navbar/>
-      <div className="flex  w-[60%] h-[75%]  shadow-2xl">
-        <div className="w-[50%] h-full border-r-2 flex flex-col items-center">
-          <div className="w-full h-full flex p-5 ">
-            <Card className="w-full h-full flex flex-col py-[40px]">
+    <div className="flex flex-col items-center justify-start gap-12 w-full min-h-screen p-4">
+      <Navbar />
+      <div className="flex flex-col lg:flex-row w-full max-w-6xl h-full shadow-2xl">
+        <div className="w-full lg:w-1/2 h-full border-r-2 flex flex-col items-center">
+          <div className="w-full h-full flex p-5">
+            <Card className="w-full h-full flex flex-col py-10">
               <CardHeader>
                 <CardTitle className="flex items-center gap-5">
                   <FaLock /> Workspace Lock
@@ -89,7 +86,6 @@ const OpenLock = () => {
                         onChange={(e) => setPassword(e.target.value)}
                       />
                     </div>
-                
                   </div>
                 </form>
               </CardContent>
@@ -109,12 +105,12 @@ const OpenLock = () => {
             </Card>
           </div>
         </div>
-        <div className="w-[50%] h-full">
-          <img src={WolfImage} alt="Side Image" className="w-full h-full" />
+        <div className="w-full lg:w-1/2 h-full flex items-center justify-center">
+          <img src={WolfImage} alt="Side Image" className="object-cover w-full h-full rounded-lg" />
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default OpenLock
+export default OpenLock;
