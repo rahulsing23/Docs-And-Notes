@@ -28,10 +28,6 @@ const CreateNewDocument = () => {
   const [uploadfileData, setUploadfileData] = useState();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log(id.toString());
-  }, []);
-
   // Handle radio button change
   const handlePriorityChange = (event) => {
     setPriority(event.target.value);
@@ -53,11 +49,9 @@ const CreateNewDocument = () => {
       const storageRef = ref(storage, `uploads/${file.name}`); 
   
       const snapshot = await uploadBytes(storageRef, file); 
-      console.log('Uploaded a blob or file!', snapshot);
   
       const fileSnap = snapshot.metadata.fullPath.split("/")[1];
       const uploadedfileName = fileSnap.toString();  
-      console.log(uploadedfileName);
   
       // Get the download URL
       const downloadURL = await getDownloadURL(snapshot.ref);  
@@ -127,7 +121,7 @@ const CreateNewDocument = () => {
       </div>
 
       {/* Content Below Navbar */}
-      <div className="mt-[70px]">
+      <div className="mt-[300px] xl:mt-[100px] lg:mt-[220px] md:mt-[200px] ">
         {/* Note Form */}
         <div className="flex flex-col justify-center items-center w-full h-screen">
           <div className="flex center items-center justify-center border-2 w-[90%] h-[70%] md:w-[70%] lg:w-[60%] shadow-2xl rounded-lg">

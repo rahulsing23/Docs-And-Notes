@@ -102,12 +102,9 @@ export default function DashboardPage() {
       {/* Sidebar */}
       <div className="relative z-20 flex flex-col items-center lg:w-[20%] w-full bg-[#070f20] py-5 lg:min-h-screen shadow-lg">
         {/* Logo */}
-        <div className="w-40 mb-6">
+        <div className="w-40 mt-6">
           <img src={LogoIcon} alt="Logo" />
         </div>
-
-        
-
         
       </div>
 
@@ -160,7 +157,7 @@ export default function DashboardPage() {
             {/* User Info */}
            
               <UserButton appearance={userButtonAppearance}/>
-              <h1 className="text-xl text-green-400 mt-2">{user?.fullName}</h1>
+              <h1 className="text-xl text-white mt-2">{user?.fullName}</h1>
        
           </div>
         </div>
