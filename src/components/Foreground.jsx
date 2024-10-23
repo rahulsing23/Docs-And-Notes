@@ -3,7 +3,7 @@ import Card from './Card';
 import { useRef } from 'react';
 import { Button } from './ui/button';
 import { Link, useParams } from 'react-router-dom';
-import { collection, getDocs, or, query, where } from 'firebase/firestore';
+import { and, collection, getDocs, or, query, where } from 'firebase/firestore';
 import { db } from '@/firebase/firebase';
 import { Input } from './ui/input';
 
@@ -38,16 +38,16 @@ const Foreground = () => {
     try {
       const q = query(
         collection(db, 'workspaceDocument'),
-        or(
-          where('title', '==', inputquery.toLowerCase()),
-          where('priority', '==', inputquery.toLowerCase())
+        and(
+          where("workspaceId", "==", id.toString()),
+          or(
+            where('title', '==', inputquery.toLowerCase()),
+            where('priority', '==', inputquery.toLowerCase())
+          )
         )
       );
       const querySnapshot = await getDocs(q);
       const Output = querySnapshot.docs
-        .filter((doc) => {
-          return doc.data().workspaceId == id.toString();
-        })
         .map((doc, index) => ({
           id: doc.id,
           ...doc.data(),

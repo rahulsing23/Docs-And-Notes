@@ -5,7 +5,7 @@ import { SignOutButton, UserButton, useUser } from '@clerk/clerk-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import LogoIcon from '@/assets/icons/Docs&Notes.png';
 import { useEffect, useRef, useState } from 'react';
-import { collection, getDocs, or, query, where } from 'firebase/firestore';
+import { and, collection, getDocs, or, query, where } from 'firebase/firestore';
 import { db } from '@/firebase/firebase';
 import WorkspaceCard from '@/components/WorkspaceCard';
 
@@ -22,8 +22,11 @@ export default function DashboardPage() {
 
   const countDocumentsInCollection = async (collectionName) => {
     try {
-      const querySnapshot = await getDocs(collection(db, collectionName));
-      const docSnapShot = await getDocs(collection(db, "workspaceDocument"))
+     
+      const queryForWorkpsace = query(collection(db, collectionName), where('createBy', '==', user?.primaryEmailAddress.emailAddress))
+      const querySnapshot = await getDocs(queryForWorkpsace);
+      const queryForDocument = query(collection(db , "workspaceDocument"), where('createdBy', '==', user?.primaryEmailAddress.emailAddress))
+      const docSnapShot = await getDocs(queryForDocument)
       const workspaceData = querySnapshot.docs.map((doc, index) => ({
         id: doc.id,
         ...doc.data(),
@@ -40,9 +43,12 @@ export default function DashboardPage() {
   const handleSearchedQuery = async () => {
     const q = query(
       collection(db, 'workspace'),
-      or(
-        where('tags', '==', inputquery.toLowerCase()),
-        where('workspaceName', '==', inputquery.toLowerCase())
+      and(
+        where('createBy', '==', user?.primaryEmailAddress.emailAddress),
+        or(
+          where('tags', '==', inputquery.toLowerCase()),
+          where('workspaceName', '==', inputquery.toLowerCase())
+        )
       )
     );
     const querySnapshot = await getDocs(q);
@@ -72,110 +78,101 @@ export default function DashboardPage() {
 
   const userButtonAppearance = {
     elements: {
-      userButtonAvatarBox: 'w-10 h-10',
+      userButtonAvatarBox: 'w-10 h-10 ',
       userButtonPopoverCard: 'bg-blue-100',
       userButtonPopoverActionButton: 'text-red-600',
     },
   };
 
   return (
-    <div className="bg-[#070f20] w-full h-screen flex flex-col md:flex-row">
-      {/* Left Section */}
-      <div className="w-full md:w-[20%] flex flex-col justify-between">
+    <div className="relative min-h-screen flex flex-col lg:flex-row bg-[#070f20] text-white">
+      {/* Background Video */}
+      <video
+        className="absolute inset-0 w-full h-full object-cover z-0"
+        autoPlay
+        loop
+        muted
+      >
+        <source src="./gif2.mp4" type="video/mp4" />
+      </video>
+
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-black bg-opacity-60 z-10"></div>
+
+      {/* Sidebar */}
+      <div className="relative z-20 flex flex-col items-center lg:w-[20%] w-full bg-[#070f20] py-5 lg:min-h-screen shadow-lg">
         {/* Logo */}
-        <div className="p-5 ml-2 mt-2">
-          <div className="w-[180px]">
-            <img src={LogoIcon} alt="" />
-          </div>
+        <div className="w-40 mb-6">
+          <img src={LogoIcon} alt="Logo" />
         </div>
 
-        <div className="w-full h-[80px] cursor-pointer border-t-2 border-black shadow-lg text-white flex gap-3 justify-start items-center p-5">
-          <UserButton appearance={userButtonAppearance} />
-          <h1 className="text-lg md:text-xl">{user?.fullName}</h1>
-        </div>
+        
+
+        
       </div>
 
-      {/* Right Section */}
-      <div className="w-full">
-        <div className="relative min-h-screen overflow-hidden rounded-none md:rounded-l-[50px]">
-          {/* Background Video */}
-          <video
-            className="absolute top-0 left-0 w-full h-full object-cover"
-            autoPlay
-            loop
-            muted
-          >
-            <source src="./gif2.mp4" type="video/mp4" />
-          </video>
+      {/* Main Content */}
+      <div className="relative z-20 flex-1 p-6 flex flex-col space-y-6 lg:w-[80%] w-full rounded-l-3xl  shadow-white shadow-3xl">
+        {/* Search and New Workspace Section */}
+        <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+          {/* Search Input */}
+          <div className="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 w-full">
 
-          {/* Overlay Container */}
-          <div className="absolute inset-0 flex flex-col md:flex-row justify-center bg-black bg-opacity-20 text-white">
-            {/* SearchBar & Workspace */}
-            <div className="w-full md:w-[70%] flex flex-col items-center p-5">
-              {/* SearchBar */}
-              <div className="w-full md:w-[600px] p-5 rounded-lg">
-                <Input
-                  ref={Inputref}
-                  className="w-full bg-[#061129] bg-opacity-50 rounded-xl border-blue-950 focus:outline-none text-center text-white placeholder:text-white"
-                  placeholder="Explore"
-                  onChange={(e) => setInputquery(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') handleSearchedQuery();
-                  }}
-                />
-              </div>
+          <Input
+            ref={Inputref}
+            className="w-full md:w-1/2 p-3 bg-gray-700 text-white placeholder:text-white border border-gray-600 rounded-lg shadow-md focus:ring-2 focus:ring-blue-500 bg-opacity-50"
+            placeholder="Search for Workspaces..."
+            onChange={(e) => setInputquery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleSearchedQuery();
+            }}
+          />
+          </div>
 
-              {/* Workspace */}
-              <div className="w-full h-full md:h-screen">
-                <ScrollArea className="h-[400px] md:h-[600px] w-full rounded-md p-4">
-                  <div className="flex flex-wrap-reverse gap-5 shadow-2xl justify-evenly">
-                    {workspaceList.map((doc, index) => (
-                      <div className="flex gap-5" key={index}>
-                        <WorkspaceCard workspaceSnap={doc} />
-                      </div>
-                    ))}
-                  </div>
-                </ScrollArea>
-              </div>
-            </div>
-
-            {/* Right Card & New Button */}
-            <div className="w-full md:w-[30%] flex flex-col justify-start gap-10 p-5">
-              <div className="w-full md:w-[300px] h-[80px] flex items-center justify-center gap-5 bg-black bg-opacity-50 rounded-3xl">
-                <Link to="/createworkspace">
-                  <Button className="bg-rose-600 rounded-2xl">
-                    +New WorkSpace
-                  </Button>
-                </Link>
-                <SignOutButton>
-                  <Button variant="secondary" className="rounded-2xl w-[100px]">
-                    Signout
-                  </Button>
-                </SignOutButton>
-              </div>
-
-              <div className="w-full h-full flex flex-col justify-evenly gap-10">
-                <div className="bg-black bg-opacity-50 w-full h-[150px] md:h-[200px] p-5 flex flex-col gap-5 md:gap-10">
-                  <h1 className="text-5xl md:text-7xl text-white">
-                    {totalWorkspace}
-                  </h1>
-                  <p className="text-xl md:text-2xl text-rose-300 font-bold">
-                    WorkSpace Available
-                  </p>
-                </div>
-
-                <div className="bg-black bg-opacity-50 w-full h-[150px] md:h-[200px] p-5 flex flex-col gap-5 md:gap-10">
-                  <h1 className="text-5xl md:text-7xl text-white">
-                    {totalDocument}
-                  </h1>
-                  <p className="text-xl md:text-2xl text-rose-300 font-bold">
-                    WorkSpace Document
-                  </p>
-                </div>
-              </div>
-            </div>
+           {/* New Workspace Button and SignOut Button */}
+           <div className="flex space-x-4">
+            <Link to="/createworkspace">
+              <Button className="bg-green-600 px-6 py-2 rounded-lg shadow-md hover:bg-green-700 transition-all text-white">+ New Workspace</Button>
+            </Link>
+            <SignOutButton>
+              <Button variant="secondary" className="rounded-lg shadow-md px-6 py-2">Sign Out</Button>
+            </SignOutButton>
           </div>
         </div>
+
+        {/* Workspace Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          {/* Workspace Count */}
+          <div className="bg-black bg-opacity-50 p-6 rounded-lg flex flex-col items-center justify-center shadow-lg transition-all hover:scale-105">
+            <h1 className="text-5xl font-bold">{totalWorkspace}</h1>
+            <p className="text-xl text-green-400 mt-2">Workspaces Available</p>
+          </div>
+
+          {/* Document Count */}
+          <div className="bg-black bg-opacity-50 p-6 rounded-lg flex flex-col items-center justify-center shadow-lg transition-all hover:scale-105">
+            <h1 className="text-5xl font-bold">{totalDocument}</h1>
+            <p className="text-xl text-green-400 mt-2">Documents Available</p>
+          </div>
+
+          <div className="bg-black bg-opacity-50 p-6 rounded-lg flex flex-col items-center justify-center shadow-lg transition-all hover:scale-105">
+            {/* <h1 className="text-5xl font-bold">{totalDocument}</h1>
+            <p className="text-xl text-green-400 mt-2">Documents Available</p> */}
+            {/* User Info */}
+           
+              <UserButton appearance={userButtonAppearance}/>
+              <h1 className="text-xl text-green-400 mt-2">{user?.fullName}</h1>
+       
+          </div>
+        </div>
+
+        {/* Workspace List */}
+        <ScrollArea className="flex-1 w-full">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+            {workspaceList.map((workspace, index) => (
+              <WorkspaceCard key={index} workspaceSnap={workspace} />
+            ))}
+          </div>
+        </ScrollArea>
       </div>
     </div>
   );

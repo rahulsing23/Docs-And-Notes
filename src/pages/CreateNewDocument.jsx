@@ -100,7 +100,7 @@ const CreateNewDocument = () => {
         downloadURL: downloadURL || "",  
         createdOn: new Date().toLocaleDateString(),
         priority: priority.toLowerCase(),
-        createdBy: user?.fullName,
+        createdBy: user?.primaryEmailAddress.emailAddress,
         uploadedfileName: uploadedfileName || null,  
       });
   

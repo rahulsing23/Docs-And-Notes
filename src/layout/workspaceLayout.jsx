@@ -20,7 +20,6 @@ const WorkSpaceLayout = () => {
         
         const q = query(collection(db, "secureworkspace"), where("workspaceId", '==', id.toString()))
         const isAvailable = await getDocs(q);
-        console.log(isAvailable.empty)
         if(isAvailable.empty)
         {
           setWorkspaceExists(true); 
