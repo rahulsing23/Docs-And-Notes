@@ -34,6 +34,8 @@ Usage: Each workspace can hold multiple notes and documents, allowing users to m
 Overview: Built-in security features ensure that user data is protected at all times.
 Usage: To secure authentication via Clerk, and Firebase’s role-based access control to restrict unauthorized access to notes and documents. These features safeguard sensitive information within the workspaces.
 
+## Deployment: https://docsandnotes.netlify.app
+
 
 ## Documentation
 
